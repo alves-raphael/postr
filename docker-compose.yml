@@ -1,0 +1,35 @@
+version: '3'
+
+# Named volumes
+volumes:
+  # MySQL Data
+  postr-mysql-data:
+    driver: local
+
+services:
+
+  # MySQL (5.7)
+  mysql:
+    image: mysql:5.7
+    container_name: postr-mysql
+    volumes:
+      - postr-mysql-data:/var/lib/mysql
+    ports:
+      - "3305:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=postr
+      - MYSQL_DATABASE=postr
+      - MYSQL_USER=postr
+      - MYSQL_PASSWORD=postr
+
+  # PHP (with Nginx)
+  app:
+    image: ambientum/php:7.3-nginx
+    container_name: postr-app
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "8080:8080"
+      - "8083:8083"
+    links:
+      - mysql
