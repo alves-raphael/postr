@@ -1,19 +1,58 @@
 #menu {
-    background-color: lightblue;
+    box-shadow: 0px 1px 5px gray;
+    height:60px;
+    text-align: right;
+}
+.links{
+    margin: 0 10px;
 }
 
-#menu ul{
-    list-style: none;
+#logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    float:left;
+    margin:15px;
+    color: deepskyblue;
 }
 
-#menu ul li {
+#menu .links a {
+    font-size: 1.1rem;
     display: inline-block;
-    padding: 10px;
+    padding: 20px 10px;
+    transition: .3s;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+#menu .links a:hover {
+    border-bottom: 5px solid deepskyblue;
 }
 
 footer {
     height: 60px;
     width:100%;
     color: white;
-    background-color: darkgray;
+    background-color: rgb(85, 85, 85);
+}
+
+#banner {
+    background-image: url('../images/office.jpg');
+    background-position: center;
+    background-size: cover;
+    width: 100vw;
+    height: 500px;
+    position: relative;
+}
+
+#banner .desc {
+    top: 20%;
+    left: 10%;
+    position: absolute;
+    color:white;
+    text-shadow: black 0 0 10px;
+    font-size: 5rem;
+    font-weight: bolder;
+    line-height: 80px;
+    text-align: center;
 }

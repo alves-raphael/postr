@@ -1,7 +1,11 @@
-@extends('name')
+@extends('master')
 
 @section('Title') Postr - Home @endsection
 
 @section('body')
-    <h1> Está é home page</h1>
+    <section id="banner">
+        <div class="desc">
+            Automatize sua campanha de marketing em redes socias
+        </div>
+    </section>
 @endsection

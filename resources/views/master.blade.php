@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{assets('css/style.css')}}">
-    <link rel="stylesheet" href="{{assets('semanticui/semantic.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('semanticui/semantic.min.css')}}">
     <title>@yield('title')</title>
 </head>
 <body>
     <nav id="menu">
-        <ul>
-            <li>Sobre</li>
-            <li>Planos</li>
-            <li>Contato</li>
+        <di>
+            <span id="logo">Postr</span>
+        </div>
+        <div class="links">
+            <a href="#about">Sobre</a>
+            <a href="#plans">Planos</a>
+            <a href="#contact">Contato</a>
             @if(Auth::check())
-                <li>Entrar</li>
+                <a href="{{route('logout')}}">Sair</a>
             @else
-                <li>Sair</li>
+                <a href="{{route('login')}}">Entrar</a>
             @endif
-        </ul>
+        </div>
     </nav>
 
     @yield('body')
@@ -26,10 +29,10 @@
     <footer>
         {{date("Y")}}
     </footer>
-    <script src="{{assets('js/main.js')}}"></script>
-    <script src="{{assets('js/jquery.min.js')}}"></script>
-    <script src="{{assets('semanticui/semantic.min.js')}}"></script>
-    <script src="{{assets('js/functions.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('semanticui/semantic.min.js')}}"></script>
+    <script src="{{asset('js/functions.js')}}"></script>
     @yield('js')
 </body>
 </html>
