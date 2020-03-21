@@ -9,6 +9,9 @@ class SocialMedia extends Model
     const FACEBOOK = 1;
     const TWITTER = 2;
 
+
+    protected $fillable = ['name'];
+
     public function tokens(){
         return $this->hasMany(Token::class);
     }

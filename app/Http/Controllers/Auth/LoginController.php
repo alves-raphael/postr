@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\SocialMedia;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
+use App\Token;
+use App\TokenType;
 
 class LoginController extends Controller
 {
@@ -29,11 +32,23 @@ class LoginController extends Controller
     public function handleProviderCallback()
     {
         $user = Socialite::driver('facebook')->user();
-
-        dd($user);
-    }
-
-    private function login(User $user){
-
+        $user = new User((array) $user);
+        $alreadyRegistered = User::socialMediaIds()->where('value', $user->id)->first();
+        if(empty($user->created_at)){
+            $user = $user->save();
+            $socialMediaIds = new SocialMedisIds([
+               'value' => $user->id,
+               'social_media_id' => SocialMedia::FACEBOOK
+               ]);
+            $user->socialMediaIds()->save($socialMediaIds);
+            $token = new Token([
+               'token' => $user->token,
+               'social_media_id' => SocialMedia::FACEBOOK,
+               'token_type' => TokenType::USER
+            ]);
+            $user->tokens()->save($token);
+        }
+        Auth::login($user, true);
+        return redirect()->route('dashboard');
     }
 }

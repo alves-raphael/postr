@@ -17,6 +17,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('login/facebook', 'Auth\LoginController@redirectToProvider');
 
-Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback')->name('facebook.callback');
+
+Route::group(['middleware' => ['guest']], function(){
+    
+    Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('login');
+    
+});
+
+Route::group(['middleware' => ['auth']], function(){
+
+    Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+
+});
