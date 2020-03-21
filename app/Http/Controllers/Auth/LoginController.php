@@ -9,6 +9,7 @@ use Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Token;
 use App\TokenType;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -32,23 +33,39 @@ class LoginController extends Controller
     public function handleProviderCallback()
     {
         $user = Socialite::driver('facebook')->user();
+        $facebookUserId = $user->id;
+        $token = $user->token;
         $user = new User((array) $user);
-        $alreadyRegistered = User::socialMediaIds()->where('value', $user->id)->first();
-        if(empty($user->created_at)){
-            $user = $user->save();
-            $socialMediaIds = new SocialMedisIds([
-               'value' => $user->id,
-               'social_media_id' => SocialMedia::FACEBOOK
-               ]);
-            $user->socialMediaIds()->save($socialMediaIds);
-            $token = new Token([
-               'token' => $user->token,
-               'social_media_id' => SocialMedia::FACEBOOK,
-               'token_type' => TokenType::USER
-            ]);
-            $user->tokens()->save($token);
+        $alreadyRegistered = User::with(['socialMediaUserIds' => function($query) use($user, $facebookUserId) {
+            $query->where('value', $facebookUserId);
+        }])->first();
+        if(!$alreadyRegistered){ // Not registered yet
+            DB::beginTransaction();
+            try{
+                $user->save();
+                $socialMediaIds = new \App\SocialMediaUserId([
+                    'value' => $facebookUserId,
+                    'social_media_id' => SocialMedia::FACEBOOK
+                ]);
+                $user->socialMediaUserIds()->save($socialMediaIds);
+                $token = new Token([
+                    'token' => $token,
+                    'social_media_id' => SocialMedia::FACEBOOK,
+                    'token_type_id' => TokenType::USER
+                ]);
+                $user->tokens()->save($token);
+                DB::commit();
+            } catch(\Exception $e){
+                DB::rollback();
+                throw $e;
+            }
         }
         Auth::login($user, true);
         return redirect()->route('dashboard');
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('home');
     }
 }

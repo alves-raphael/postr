@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {
+    protected $fillable = ['token', 'user_id', 'social_media_id', 'valid', 'token_type_id'];
+
     public function socialMedia(){
         return $this->belongsTo(SocialMedia::class);
     }
