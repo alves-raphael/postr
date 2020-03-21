@@ -14,5 +14,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+})->name('home');
+
+
+Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback')->name('facebook.callback');
+
+
+Route::group(['middleware' => ['guest']], function(){
+    
+    Route::get('login/facebook', 'Auth\LoginController@redirectToProvider');
+    
+    Route::get('login', function(){
+        return view('login');
+    })->name('login');
+});
+
+Route::group(['middleware' => ['auth']], function(){
+
+    Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+
+    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
 });

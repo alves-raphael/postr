@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email'
     ];
 
     /**
@@ -24,16 +24,33 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    // protected $hidden = [
+    //     'password', 'remember_token',
+    // ];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    // protected $casts = [
+    //     'email_verified_at' => 'datetime',
+    // ];
+
+    public function isSocialMediaUser(int $socialMediaId) : bool {
+        return !$this->socialMediaUserIds()
+            ->where("social_media_id", $socialMediaId)->isEmpty();
+    }
+
+    public function socialMediaUserIds(){
+        return $this->hasMany(SocialMediaUserId::class);
+    }
+
+    public function tokens(){
+        return $this->hasMany(Token::class);
+    }
+    
+    public function getLastValidToken() : Token {
+        return $this->tokens()->where('valid', true)->order('created_at')->first();
+    }
 }
