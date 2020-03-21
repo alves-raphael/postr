@@ -20,14 +20,14 @@ Route::get('/', function () {
 
 Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback')->name('facebook.callback');
 
-Route::get('login', function(){
-    return view('login');
-})->name('login');
 
 Route::group(['middleware' => ['guest']], function(){
     
     Route::get('login/facebook', 'Auth\LoginController@redirectToProvider');
     
+    Route::get('login', function(){
+        return view('login');
+    })->name('login');
 });
 
 Route::group(['middleware' => ['auth']], function(){
