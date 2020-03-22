@@ -2,6 +2,10 @@
     box-shadow: 0px 1px 5px gray;
     height:60px;
     text-align: right;
+    position: fixed;
+    width: 100vw;
+    background-color: white;
+    z-index: 2;
 }
 .links{
     margin: 0 10px;
@@ -41,14 +45,15 @@ footer {
     background-position: center;
     background-size: cover;
     width: 100vw;
-    height: 500px;
+    height: 600px;
     position: relative;
 }
 
 #banner .desc {
-    top: 20%;
-    left: 10%;
-    position: absolute;
+    top: 30%;
+    width: 75%;
+    margin: auto;
+    position: relative;
     color:white;
     text-shadow: black 0 0 10px;
     font-size: 5rem;
@@ -56,3 +61,20 @@ footer {
     line-height: 80px;
     text-align: center;
 }
+
+h1 {
+    color: deepskyblue;
+}
+
+.text-section {
+    padding: 30px;
+}
+
+.center {
+    text-align: center;
+}
+
+.ui, .card {
+    display:inline-block;
+}
+
