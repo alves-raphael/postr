@@ -67,7 +67,14 @@ h1 {
 }
 
 .text-section {
-    text-align: center;
     padding: 30px;
+}
+
+.center {
+    text-align: center;
+}
+
+.ui, .card {
+    display:inline-block;
 }
 
