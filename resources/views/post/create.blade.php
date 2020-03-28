@@ -4,10 +4,17 @@
 
 @section('body')
  <form class="ui form">
-    <div class="three fields">
+    <div class="four fields">
         <div class="field">
           <label>Título</label>
           <input type="text" name="title" placeholder="Título para controle interno">
+        </div>
+        <div class="field">
+          <label>Rede social</label>
+          <select class="ui fluid dropdown" name="sendnow" id="send-now">
+              <option value="">Selecione</option>
+              <option value="true">Facebook</option>
+          </select>
         </div>
         <div class="field">
             <label>Enviar imediatamente?</label>
