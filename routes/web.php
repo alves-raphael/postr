@@ -25,7 +25,14 @@ Route::group(['middleware' => ['guest']], function(){
     Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('login');
 
 });
-Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+
+Route::get('posts/list', function(){
+    return view('post.list');
+})->name('post.list');
+
+Route::get('posts/create', function(){
+    return view('post.create');
+})->name('post.create');
 
 Route::group(['middleware' => ['auth']], function(){
     
