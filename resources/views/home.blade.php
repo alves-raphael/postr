@@ -8,20 +8,7 @@
     <title>Postr - home</title>
 </head>
 <body>
-    <nav id="menu">
-        <di>
-            <span id="logo">Postr</span>
-        </div>
-        <div class="links">
-            @if(!Auth::check())
-                <a href="#about">Sobre</a>
-                <a href="#plans">Planos</a>
-                <a href="#contact">Contato</a>
-                <a href="{{route('login')}}">Entrar</a>
-            @endif
-        </div>
-    </nav>
-
+    @include('includes.navbar')
     <section id="banner">
         <div class="desc">
             Automatize sua campanha de marketing em redes socias
@@ -30,7 +17,9 @@
     <section id="about" class="text-section center">
         <h1>Sobre</h1>    
         <p>
-                Ipsum incididunt tempor excepteur ea proident adipisicing id. Ullamco enim veniam irure nulla enim sint id est proident consectetur. Lorem excepteur qui anim exercitation nulla velit. Magna exercitation ex esse deserunt et consectetur.Non cupidatat magna magna aute irure irure culpa qui aliquip amet sint fugiat sunt. Aute sunt eiusmod nostrud exercitation excepteur qui laborum deserunt eiusmod Lorem officia consequat. Ipsum aliquip Lorem quis non sit voluptate labore culpa occaecat minim nulla ipsum ex qui. Excepteur officia exercitation id irure ut. Incididunt incididunt eu non eu non irure sunt nostrud dolore. Cupidatat enim ut pariatur cillum tempor enim ex.
+            Ipsum incididunt tempor excepteur ea proident adipisicing id. Ullamco enim veniam irure nulla enim sint id est proident consectetur. Lorem excepteur qui anim exercitation nulla velit. Magna exercitation ex esse deserunt et consectetur.Non cupidatat magna magna aute irure irure culpa qui aliquip amet sint fugiat sunt. Aute sunt eiusmod nostrud exercitation excepteur qui laborum deserunt eiusmod Lorem officia consequat. Ipsum aliquip Lorem quis non sit voluptate labore culpa occaecat minim nulla ipsum ex qui. 
+            
+            Excepteur officia exercitation id irure ut. Incididunt incididunt eu non eu non irure sunt nostrud dolore. Cupidatat enim ut pariatur cillum tempor enim ex.
             
             Sit ad anim amet ut reprehenderit ut magna aliqua occaecat magna cillum deserunt duis. Est velit et ut deserunt sit ea ad. Commodo ullamco nisi eu anim qui velit sint. Excepteur nulla reprehenderit minim quis velit irure enim laborum magna anim labore amet minim proident. Laboris laborum non nulla Lorem tempor exercitation adipisicing esse dolor. Laboris est quis laborum veniam irure ex laboris ullamco incididunt reprehenderit laborum. Aliqua officia qui ut do elit excepteur ex voluptate Lorem in voluptate.
             
