@@ -25,10 +25,10 @@ Route::group(['middleware' => ['guest']], function(){
     Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('login');
 
 });
+Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 
 Route::group(['middleware' => ['auth']], function(){
-
-    Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+    
 
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
