@@ -35,7 +35,7 @@
           <label>Hora da publicação</label>
           <input type="time" name="time" id="time" disabled>
         </div>
-        <input type="hidden" name="publish" id="publish" value="9999-99-99 99:99">
+        <input type="hidden" name="publication" id="publish" value="9999-99-99 99:99" disabled>
     </div>
     <div class="field">
         <textarea name="body" id="" cols="30" rows="10"></textarea>

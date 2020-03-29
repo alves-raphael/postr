@@ -26,16 +26,17 @@ Route::group(['middleware' => ['guest']], function(){
 
 });
 
-Route::get('posts/list', function(){
-    return view('post.list');
-})->name('post.list');
 
-Route::get('posts/create', "PostController@creation")->name('post.create');
-
-Route::post('posts/create', "PostController@create")->name('post.create.new');
 
 Route::group(['middleware' => ['auth']], function(){
     
+    Route::get('posts/list', function(){
+        return view('post.list');
+    })->name('post.list');
+    
+    Route::get('posts/create', "PostController@creation")->name('post.create');
+    
+    Route::post('posts/create', "PostController@create")->name('post.create.new');
 
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 

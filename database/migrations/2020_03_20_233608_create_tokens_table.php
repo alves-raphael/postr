@@ -19,7 +19,7 @@ class CreateTokensTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('token_type_id');
-            $table->boolean('valid')->default(false);
+            $table->boolean('valid')->default(true);
             $table->timestamps();
         });
     }

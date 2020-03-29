@@ -11,7 +11,7 @@
 <body>
     <div class="ui bottom attached segment pushable">
         <div class="ui visible inverted left vertical sidebar menu">
-          <a class="item active">
+          <a href="{{route('post.list')}}" class="item active">
             <i class="sticky note icon"></i>
             Publicações
           </a>
@@ -23,7 +23,7 @@
             <i class="calendar icon"></i>
             Conograma
           </a>
-          <a class="item">
+          <a href="{{route('logout')}}" class="item">
             <i class="sign out alternate icon"></i>
             Sair
           </a>

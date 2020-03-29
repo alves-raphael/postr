@@ -3,16 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Guzzle\HttpGuzzle;
 
 class Post extends Model
 {
-    protected $fillable = ['title', 'body', 'publish', 'posted','social_media_token', 'social_media_id'];
+    protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id'];
 
     protected $casts = [
-        'posted' => 'boolean'
+        'published' => 'boolean'
     ];
 
-    protected $dates = ['publish', 'created_at','updated_at'];
+    protected $dates = ['publication', 'created_at','updated_at'];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -26,7 +27,7 @@ class Post extends Model
         return [
             'title' => 'required|min:3',
             'body' => 'required',
-            'publish' => [
+            'publication' => [
                 function($attr, $date, $fail){
                     $date = new \DateTime($date);
                     $now = new \DateTime();
@@ -39,6 +40,6 @@ class Post extends Model
     }
 
     public function publish(){
-        $this->posted = true;
+        $this->published = true;
     }
 }

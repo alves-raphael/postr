@@ -17,8 +17,8 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('body');
-            $table->dateTime('publish')->useCurrent();
-            $table->boolean('posted')->default(false);
+            $table->dateTime('publication')->useCurrent();
+            $table->boolean('published')->default(false);
             $table->unsignedInteger('topic_id')->nullable();
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('user_id');
