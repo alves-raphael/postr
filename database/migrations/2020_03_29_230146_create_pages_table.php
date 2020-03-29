@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTokensTable extends Migration
+class CreatePagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreateTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('tokens', function (Blueprint $table) {
+        Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('token');
+            $table->string('name');
+            $table->string('social_media_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('social_media_id');
-            $table->unsignedInteger('token_type_id');
-            $table->boolean('valid')->default(true);
             $table->timestamps();
-
-            $table->foreign('social_media_id')->references('id')->on('social_media');
+            
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('token_type_id')->references('id')->on('token_types');
         });
     }
 
@@ -35,6 +31,6 @@ class CreateTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tokens');
+        Schema::dropIfExists('pages');
     }
 }
