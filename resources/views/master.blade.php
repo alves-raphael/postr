@@ -13,15 +13,11 @@
         <div class="ui visible inverted left vertical sidebar menu">
           <a class="item active">
             <i class="sticky note icon"></i>
-            Publicar
-          </a>
-          <a class="item">
-            <i class="list icon"></i>
             Publicações
           </a>
           <a class="item">
             <i class="newspaper icon"></i>
-            Assunto
+            Assuntos
           </a>
           <a class="item">
             <i class="calendar icon"></i>
@@ -35,14 +31,15 @@
         <div class="pusher">
           <div class="ui basic segment" style="padding-right:20%">
             <h1 class="ui header" id="main-title">@yield('title')</h1>
+            @include('includes.alerts')
             @yield('body')
           </div>
         </div>
     </div>
     <script src="{{asset('js/jquery.min.js')}}"></script>
     <script src="{{asset('semanticui/semantic.min.js')}}"></script>
-    <script src="{{asset('js/main.js')}}"></script>
     <script src="{{asset('js/functions.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     @yield('js')
 </body>
 </html>

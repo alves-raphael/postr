@@ -3,17 +3,20 @@
 @section('title') Publicar @endsection
 
 @section('body')
- <form class="ui form">
-    <div class="four fields">
+<form class="ui form"  method="post" action="{{route('post.create.new')}}">
+  @csrf
+    <div class="five fields">
         <div class="field">
           <label>Título</label>
           <input type="text" name="title" placeholder="Título para controle interno">
         </div>
         <div class="field">
           <label>Rede social</label>
-          <select class="ui fluid dropdown" name="sendnow" id="send-now">
+          <select class="ui fluid dropdown" name="social_media_id" id="social-media">
               <option value="">Selecione</option>
-              <option value="true">Facebook</option>
+              @foreach($socialMedias as $socialMedia)
+                <option value="{{$socialMedia->id}}">{{$socialMedia->name}}</option>
+              @endforeach
           </select>
         </div>
         <div class="field">
@@ -26,8 +29,13 @@
         </div>
         <div class="disabled field" id="release-date">
           <label>Data da publicação</label>
-          <input type="date" name="date" disabled>
+          <input type="date" name="date" id="date" disabled>
         </div>
+        <div class="disabled field" id="release-hour">
+          <label>Hora da publicação</label>
+          <input type="time" name="time" id="time" disabled>
+        </div>
+        <input type="hidden" name="publish" id="publish" value="9999-99-99 99:99">
     </div>
     <div class="field">
         <textarea name="body" id="" cols="30" rows="10"></textarea>
@@ -38,23 +46,5 @@
 @endsection
 
 @section('js')
-  <script>
-      var releaseDate = $('#release-date');
-      $('#send-now').change(function(){
-        if (this.value == 'true'){
-            disable(releaseDate);
-        } else {
-            enable(releaseDate);
-        }
-      });
-
-    $('.ui.form').form({
-        fields: {
-            title: 'empty',
-            sendnow: 'empty',
-            body: 'empty',
-            date: 'empty',
-        }
-    });
-  </script>
+  <script src="{{asset('js/post/create.js')}}"></script>
 @endsection
