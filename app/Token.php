@@ -20,8 +20,8 @@ class Token extends Model
         return $this->belongsTo(TokenType::class);
     }
 
-    public function pages(){
-        return $this->hasMany(Page::access);
+    public function page(){
+        return $this->belongsTo(Page::access);
     }
 
     public function invalidate(){

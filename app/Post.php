@@ -15,8 +15,8 @@ class Post extends Model
 
     protected $dates = ['publication', 'created_at','updated_at'];
 
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function page(){
+        return $this->belongsTo(Page::class);
     }
 
     public function socialMedia(){

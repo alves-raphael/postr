@@ -19,12 +19,14 @@ class CreateTokensTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('token_type_id');
+            $table->unsignedInteger('page_id')->nullable();
             $table->boolean('valid')->default(true);
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('token_type_id')->references('id')->on('token_types');
+            $table->foreign('page_id')->references('id')->on('pages');
         });
     }
 
