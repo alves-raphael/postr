@@ -11,6 +11,9 @@
 <body>
     <div class="ui bottom attached segment pushable">
         <div class="ui visible inverted left vertical sidebar menu">
+          <div class="item title">
+            Postr
+          </div>
           <a href="{{route('post.list')}}" class="item active">
             <i class="sticky note icon"></i>
             Publicações

@@ -41,7 +41,7 @@ class LoginController extends Controller
             $user = $alreadyRegistered;
         }
         Auth::login($user, true);
-        return redirect()->route('post.create');
+        return redirect()->route('post.list');
     }
 
     public function logout(){

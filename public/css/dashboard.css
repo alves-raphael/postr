@@ -1,7 +1,8 @@
-#body {
-    background-color: red;
-}
-
 .main-title {
     font-size: 5rem;
+}
+
+div.title {
+    font-weight: bold !important;
+    font-size: 1.2rem;
 }
