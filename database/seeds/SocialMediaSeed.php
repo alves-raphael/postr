@@ -29,8 +29,5 @@ class SocialMediaSeed extends Seeder
         DB::table('token_types')->insert(
             ['name' => 'user_id']
         );
-        DB::table('token_types')->insert(
-            ['name' => 'page_id']
-        );
     }
 }
