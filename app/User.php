@@ -45,6 +45,33 @@ class User extends Authenticatable
             }])->first();
     }
 
+    public function setupPages(){
+        $userId = $this->getLastValidToken(TokenType::USER_ID)->token;
+        $userAccessToken = $this->getLastValidToken(TokenType::USER_ACCESS)->token;
+        $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccessToken}";
+        $client = new \GuzzleHttp\Client();
+        $response = null;
+        try {
+            $response = $client->request('GET', $url);
+            $response = json_decode($response->getBody())->data;
+            foreach($response as $item){
+                $page = new Page();
+                $page->name = $item->name;
+                $page->social_media_id = $item->id;
+                $page->user()->associate(Auth::user());
+                $page->save();
+                $token = new Token([
+                    'token' => $item->access_token,
+                    'social_media_id' => SocialMedia::FACEBOOK,
+                    'token_type_id' => TokenType::PAGE_ACCESS
+                ]);
+                $page->tokens()->save($token);
+            }
+        } catch (\Exception $e){
+            print_r($e->getMessage());
+        }
+    }
+
     public function signUp($token, $faceId){
         DB::beginTransaction();
         try{
@@ -52,7 +79,7 @@ class User extends Authenticatable
             $token = new Token([
                 'token' => $token,
                 'social_media_id' => SocialMedia::FACEBOOK,
-                'token_type_id' => TokenType::USER
+                'token_type_id' => TokenType::USER_ACCESS
             ]);
             $this->tokens()->save($token);
             $token = new Token([

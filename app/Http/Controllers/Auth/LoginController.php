@@ -7,8 +7,7 @@ use App\User;
 use App\SocialMedia;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
-use App\Token;
-use App\TokenType;
+
 class LoginController extends Controller
 {
     /**
@@ -37,6 +36,7 @@ class LoginController extends Controller
         $alreadyRegistered = $user->isAlreadyRegistered($facebookUserId);
         if(!$alreadyRegistered){ // Not registered yet
             $user->signUp($token, $facebookUserId);
+            $user->setupPages();
         }else{
             $user = $alreadyRegistered;
         }

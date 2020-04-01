@@ -28,17 +28,4 @@ class Token extends Model
         $this->valid = false;
         $this->save();
     }
-
-    public function getNewPageAccessToken(){
-        $userId = Auth::user()->getUserId()->token;
-        $userAccessToken = Auth::user()->getLastValidToken(TokenType::USER);
-        $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccessToken}";
-        $client = new GuzzleHttp\Client();
-        $response = null;
-        try {
-            $response = $client->get($url);
-        } catch(\Exception $e){
-            die($e->getMessage());
-        }
-    }
 }

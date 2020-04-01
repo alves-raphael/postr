@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TokenType extends Model
 {
-    const USER = 1;
-    const PAGE = 2;
+    const USER_ACCESS = 1;
+    const PAGE_ACCESS = 2;
     const APP = 3;
     const USER_ID = 4;
     const PAGE_ID = 5;
