@@ -38,6 +38,10 @@ class User extends Authenticatable
         return $this->tokens()->where('valid', true)->where('token_type_id', $type)->orderBy('created_at')->first();
     }
 
+    public function pages(){
+        return $this->hasMany(Page::class);
+    }
+
     public function isAlreadyRegistered($facebookUserId){
         return User::with(['tokens' => 
             function ($query) use($facebookUserId) {
@@ -98,6 +102,6 @@ class User extends Authenticatable
     }
 
     public function getUserId(){
-        $this->tokens()->where('token_type_id', TokenType::USER_ID)->first();
+        return $this->tokens()->where('token_type_id', TokenType::USER_ID)->first();
     }
 }

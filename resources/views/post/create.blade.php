@@ -23,8 +23,9 @@
           <label>Página</label>
           <select class="ui fluid dropdown" name="sendnow" id="send-now">
               <option value="">Selecione</option>
-              <option value="true">Sim</option>
-              <option value="false">Não</option>
+              @foreach($pages as $page)
+                <option value="{{$page->social_media_id}}">{{$page->name}}</option>
+              @endforeach
           </select>
         </div>
     </div>

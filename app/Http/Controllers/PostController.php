@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function creation(){
-        return view('post.create', ['socialMedias' => SocialMedia::all()]);
+        $pages = Auth::user()->pages()->get();
+        return view('post.create', ['socialMedias' => SocialMedia::all(), 'pages' => $pages]);
     }
 
     public function create(Request $request){
