@@ -18,11 +18,12 @@ class PostController extends Controller
     public function create(Request $request){
         $request->validate(Post::getRules());
         $post = new Post($request->all());
-        $post->user()->associate(Auth::user());
-        if(!$post->publication){
-            $post->publish();
-        }
         $post->save();
-        return redirect()->back()->with('success', 'Publicação criada com successo');
+        $extra = '';
+        if(!$post->isScheduled()){
+            $post->publish();
+            $extra = 'e publicada';
+        }
+        return redirect()->back()->with('success', "Publicação criada {$extra} com successo");
     }
 }

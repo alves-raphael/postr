@@ -21,10 +21,10 @@
         </div>
         <div class="field">
           <label>Página</label>
-          <select class="ui fluid dropdown" name="sendnow" id="send-now">
+          <select class="ui fluid dropdown" name="page_id" id="pages">
               <option value="">Selecione</option>
               @foreach($pages as $page)
-                <option value="{{$page->social_media_id}}">{{$page->name}}</option>
+                <option value="{{$page->id}}">{{$page->name}}</option>
               @endforeach
           </select>
         </div>

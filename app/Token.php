@@ -21,7 +21,7 @@ class Token extends Model
     }
 
     public function page(){
-        return $this->belongsTo(Page::access);
+        return $this->belongsTo(Page::class);
     }
 
     public function invalidate(){
