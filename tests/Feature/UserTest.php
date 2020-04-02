@@ -23,26 +23,9 @@ class UserTest extends TestCase
     public function testSetupPages()
     {
         $this->seed();
+        $this->seed(\UsersTestSeeder::class);
 
-        $user = User::create([
-            'name' => 'Raphael',
-            'email' => 'raphael@gmail.com',
-        ]);
-
-        $userAccessToken = Token::create([
-            'token' => 'asdaskljcnaqqn11980bn98b127xn12987x141739xnz12*&&)(*)',
-            'user_id' => $user->id,
-            'social_media_id' => SocialMedia::FACEBOOK,
-            'token_type_id' => \App\TokenType::USER_ACCESS,
-        ]);
-
-        $userAccessToken = Token::create([
-            'token' => '123456789',
-            'user_id' => $user->id,
-            'social_media_id' => SocialMedia::FACEBOOK,
-            'token_type_id' => \App\TokenType::USER_ID,
-        ]);
-
+        $user = User::first();
         Auth::login($user);
 
         $fakeFacebookResponse = '{"data":[{"access_token":"EAACEdE...","category":"Brand","category_list":[{"id":"1605186416478696","name":"Brand"}],"name":"Ash Cat Page","id":"1353269864728879","tasks":["ANALYZE","ADVERTISE","MODERATE","CREATE_CONTENT","MANAGE"]},{"access_token":"EAACEdE...","category":"Pet Groomer","category_list":[{"id":"163003840417682","name":"Pet Groomer"},{"id":"2632","name":"Pet"}],"name":"Unofficial: Tigger the Cat","id":"1755847768034402","tasks":["ANALYZE","ADVERTISE","MODERATE","CREATE_CONTENT"]}]}';
