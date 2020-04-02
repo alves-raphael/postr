@@ -16,7 +16,7 @@ class CreatePagesTable extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('social_media_id');
+            $table->string('social_media_id')->unique();
             $table->unsignedInteger('user_id');
             $table->timestamps();
             

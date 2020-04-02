@@ -7,6 +7,7 @@ use App\User;
 use App\SocialMedia;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -27,7 +28,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback()
+    public function handleProviderCallback(Request $request)
     {
         $user = Socialite::driver('facebook')->user();
         $facebookUserId = $user->id;

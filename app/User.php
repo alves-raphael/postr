@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -32,7 +33,7 @@ class User extends Authenticatable
     public function tokens(){
         return $this->hasMany(Token::class);
     }
-    
+
     public function getLastValidToken($type) {
         return $this->tokens()->where('valid', true)->where('token_type_id', $type)->orderBy('created_at')->first();
     }
@@ -45,11 +46,11 @@ class User extends Authenticatable
             }])->first();
     }
 
-    public function setupPages(){
+    public function setupPages($client = null){
         $userId = $this->getLastValidToken(TokenType::USER_ID)->token;
         $userAccessToken = $this->getLastValidToken(TokenType::USER_ACCESS)->token;
         $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccessToken}";
-        $client = new \GuzzleHttp\Client();
+        $client = $client ? : new \GuzzleHttp\Client();
         $response = null;
         try {
             $response = $client->request('GET', $url);
@@ -58,17 +59,18 @@ class User extends Authenticatable
                 $page = new Page();
                 $page->name = $item->name;
                 $page->social_media_id = $item->id;
-                $page->user()->associate(Auth::user());
+                $page->user_id = Auth::id();
                 $page->save();
                 $token = new Token([
                     'token' => $item->access_token,
                     'social_media_id' => SocialMedia::FACEBOOK,
-                    'token_type_id' => TokenType::PAGE_ACCESS
+                    'token_type_id' => TokenType::PAGE_ACCESS,
+                    'user_id' => Auth::id()
                 ]);
                 $page->tokens()->save($token);
             }
         } catch (\Exception $e){
-            print_r($e->getMessage());
+            dd($e->getMessage());
         }
     }
 
