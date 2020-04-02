@@ -7,14 +7,12 @@ use App\User;
 use App\SocialMedia;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
-use App\Token;
-use App\TokenType;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
     /**
-     * Redirect the user to the GitHub authentication page.
+     * Redirect the user to the facebook authentication page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -26,47 +24,25 @@ class LoginController extends Controller
     }
 
     /**
-     * Obtain the user information from GitHub.
+     * Obtain the user information from facebook.
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback()
+    public function handleProviderCallback(Request $request)
     {
         $user = Socialite::driver('facebook')->user();
         $facebookUserId = $user->id;
         $token = $user->token;
         $user = new User((array) $user);
-        $alreadyRegistered = User::with(['socialMediaUserIds' => 
-            function($query) use($user, $facebookUserId) {
-                $query->where('value', $facebookUserId);
-            }])->first();
+        $alreadyRegistered = $user->isAlreadyRegistered($facebookUserId);
         if(!$alreadyRegistered){ // Not registered yet
-            $this->singIn($user, $token, $facebookUserId);
+            $user->signUp($token, $facebookUserId);
+            $user->setupPages();
+        }else{
+            $user = $alreadyRegistered;
         }
         Auth::login($user, true);
-        return redirect()->route('dashboard');
-    }
-
-    private function signIn($user, $token, $faceId){
-        DB::beginTransaction();
-        try{
-            $user->save();
-            $socialMediaIds = new \App\SocialMediaUserId([
-                'value' => $faceId,
-                'social_media_id' => SocialMedia::FACEBOOK
-            ]);
-            $user->socialMediaUserIds()->save($socialMediaIds);
-            $token = new Token([
-                'token' => $token,
-                'social_media_id' => SocialMedia::FACEBOOK,
-                'token_type_id' => TokenType::USER
-            ]);
-            $user->tokens()->save($token);
-            DB::commit();
-        } catch(\Exception $e){
-            DB::rollback();
-            throw $e;
-        }
+        return redirect()->route('post.list');
     }
 
     public function logout(){

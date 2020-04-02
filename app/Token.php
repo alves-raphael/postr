@@ -19,4 +19,13 @@ class Token extends Model
     public function type(){
         return $this->belongsTo(TokenType::class);
     }
+
+    public function page(){
+        return $this->belongsTo(Page::access);
+    }
+
+    public function invalidate(){
+        $this->valid = false;
+        $this->save();
+    }
 }

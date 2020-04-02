@@ -26,5 +26,8 @@ class SocialMediaSeed extends Seeder
         DB::table('token_types')->insert(
             ['name' => 'App']
         );
+        DB::table('token_types')->insert(
+            ['name' => 'user_id']
+        );
     }
 }

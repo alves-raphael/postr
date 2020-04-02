@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTokensTable extends Migration
+class CreatePostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('tokens', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('token');
-            $table->unsignedInteger('user_id');
+            $table->string('title');
+            $table->text('body');
+            $table->dateTime('publication')->useCurrent();
+            $table->boolean('published')->default(false);
+            $table->unsignedInteger('topic_id')->nullable();
             $table->unsignedInteger('social_media_id');
-            $table->unsignedInteger('token_type_id');
-            $table->unsignedInteger('page_id')->nullable();
-            $table->boolean('valid')->default(true);
+            $table->unsignedInteger('page_id');
+            $table->string('social_media_token')->nullable();
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('token_type_id')->references('id')->on('token_types');
             $table->foreign('page_id')->references('id')->on('pages');
         });
     }
@@ -37,6 +37,6 @@ class CreateTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tokens');
+        Schema::dropIfExists('posts');
     }
 }

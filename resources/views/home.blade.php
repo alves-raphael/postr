@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{asset('semanticui/semantic.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/home.css')}}">
+    <link rel="stylesheet" href="{{asset('css/navbar.css')}}">
     <title>Postr - home</title>
 </head>
 <body>
@@ -30,7 +31,7 @@
             Voluptate ullamco minim non dolor est sit culpa veniam. Deserunt sunt nisi anim commodo proident sit qui nulla culpa esse ad anim id. Id consequat sit officia eu. Pariatur qui nulla laboris culpa reprehenderit anim nulla voluptate aliquip voluptate.
         </p>    
     </section>
-    <section id="#plans" class="text-section">
+    <section id="plans" class="text-section">
         <h1 class="center"> Planos </h1>
         <div class="ui card">
             <div class="content">
