@@ -62,14 +62,14 @@ class User extends Authenticatable
             foreach($response as $item){
                 $page = new Page();
                 $page->name = $item->name;
-                $page->social_media_id = $item->id;
-                $page->user_id = Auth::id();
-                $page->save();
+                $page->social_media_token = $item->id;
+                $this->pages()->save($page);
+
                 $token = new Token([
                     'token' => $item->access_token,
                     'social_media_id' => SocialMedia::FACEBOOK,
                     'token_type_id' => TokenType::PAGE_ACCESS,
-                    'user_id' => Auth::id()
+                    'user_id' => $this->id
                 ]);
                 $page->tokens()->save($token);
             }

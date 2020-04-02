@@ -7,7 +7,7 @@ use Guzzle\HttpGuzzle;
 
 class Post extends Model
 {
-    protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id'];
+    protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id','page_id'];
 
     protected $casts = [
         'published' => 'boolean'
@@ -39,7 +39,23 @@ class Post extends Model
         ];
     }
 
-    public function publish(){
-        $this->published = true;
+    public function isScheduled(){
+        return !empty($this->publication);
+    }
+    public function publish($client = null){
+        $page = $this->page()->first();
+        $pageAccessToken = $page->tokens()->where('valid', true)->first()->token;
+        $body = \urlencode($this->body);
+        $url = "https://graph.facebook.com/{$page->social_media_token}/feed?message={$body}&access_token={$pageAccessToken}";
+        $client = $client ? : new \GuzzleHttp\Client();
+        try{
+            $response = $client->request('POST', $url);
+            $response = json_decode($response->getBody());
+            $this->social_media_token = $response->id;
+            $this->published = true;
+            $this->save();
+        } catch (\Exception $e){
+            dd($e->getMessage());
+        }
     }
 }
