@@ -26,4 +26,35 @@ class PostController extends Controller
         }
         return redirect()->back()->with('success', "Publicação criada {$extra} com successo");
     }
+
+    public function publish(Request $request){
+        $posts = $request->get('posts');
+        $response = ['success' => false, 'messages' => [], 'result' => []];
+        if(empty($posts) || !is_array($posts)){
+            $response['messages'][] = "Parameter 'posts' are required and need to be a list of posts' id";
+            return response()->json($response)->setStatusCode(400);
+        }
+
+        $posts = Post::whereIn('id', $posts)->get();
+        $published = [];
+        foreach($posts as $post){
+            if($post->published){
+                $published[] = $post->id;
+            }
+        }
+
+        // validar se o mesmos posts já não foram publicados
+        if(!empty($published)){
+            $ids = implode(",", $published);
+            $response['messages'][] = "The posts with the id {$ids} have already been published. Please try again";
+            return response()->json($response)->setStatusCode(400);
+        }
+
+        foreach($posts as $post){
+            $post->publish();
+        }
+
+        $response['messages'][] = 'Posts have been published with success!';
+        return response()->json($response)->setStatusCode(200);
+    }
 }
