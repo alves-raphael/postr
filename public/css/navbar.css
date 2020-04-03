@@ -32,3 +32,22 @@
 #menu .links a:hover {
     border-bottom: 5px solid deepskyblue;
 }
+
+#menu .links button {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 12px;
+    display:none;
+}
+
+@media screen and (max-width: 600px){
+    #menu .links a {
+        display: none;
+    }
+
+    #menu .links button {
+        display: inline-block;
+    }
+}

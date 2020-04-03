@@ -9,13 +9,14 @@
     <title>Postr - home</title>
 </head>
 <body>
+    
     @include('includes.navbar')
     <section id="banner">
         <div class="desc">
             Automatize sua campanha de marketing em redes socias
         </div>
     </section>
-    <section id="about" class="text-section center">
+    <section id="about" class="content-section center">
         <h1>Sobre</h1>    
         <p>
             Ipsum incididunt tempor excepteur ea proident adipisicing id. Ullamco enim veniam irure nulla enim sint id est proident consectetur. Lorem excepteur qui anim exercitation nulla velit. Magna exercitation ex esse deserunt et consectetur.Non cupidatat magna magna aute irure irure culpa qui aliquip amet sint fugiat sunt. Aute sunt eiusmod nostrud exercitation excepteur qui laborum deserunt eiusmod Lorem officia consequat. Ipsum aliquip Lorem quis non sit voluptate labore culpa occaecat minim nulla ipsum ex qui. 
@@ -31,14 +32,14 @@
             Voluptate ullamco minim non dolor est sit culpa veniam. Deserunt sunt nisi anim commodo proident sit qui nulla culpa esse ad anim id. Id consequat sit officia eu. Pariatur qui nulla laboris culpa reprehenderit anim nulla voluptate aliquip voluptate.
         </p>    
     </section>
-    <section id="plans" class="text-section">
+    <section id="plans" class="content-section flex-section">
         <h1 class="center"> Planos </h1>
         <div class="ui card">
             <div class="content">
                 <div class="header">Starter</div>
             </div>
             <div class="content">
-                <h4 class="ui sub header">Beneficios</h4>
+                <h4 class="ui sub header">Benefícios</h4>
                 <ul>
                     <li>Lorem</li>
                     <li>Ipsum</li>
@@ -54,7 +55,7 @@
                 <div class="header">Standard</div>
             </div>
             <div class="content">
-                <h4 class="ui sub header">Beneficios</h4>
+                <h4 class="ui sub header">Benefícios</h4>
                 <ul>
                     <li>Lorem</li>
                     <li>Ipsum</li>
@@ -70,7 +71,7 @@
                 <div class="header">Premium</div>
             </div>
             <div class="content">
-                <h4 class="ui sub header">Beneficios</h4>
+                <h4 class="ui sub header">Benefícios</h4>
                 <ul>
                     <li>Lorem</li>
                     <li>Ipsum</li>

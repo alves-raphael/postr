@@ -52,7 +52,7 @@
       <textarea name="body" id="" cols="30" rows="10"></textarea>
     </div>
     <a class="ui button" href="{{route('post.list')}}"> <i class="icon arrow left"></i> Voltar</a>
-    <button class="ui green button" type="submit">Publicar</button>
+    <button class="ui green button" type="submit">Salvar</button>
   </form>
 @endsection
 
