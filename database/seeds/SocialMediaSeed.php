@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class SocialMediaSeed extends Seeder
 {
@@ -28,6 +29,14 @@ class SocialMediaSeed extends Seeder
         );
         DB::table('token_types')->insert(
             ['name' => 'user_id']
+        );
+
+        DB::table('users')->insert(
+            [
+                'name' => 'robot',
+                'email' => 'robot@example.com',
+                'api_token' => Str::random(60)
+            ]
         );
     }
 }

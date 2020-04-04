@@ -27,11 +27,19 @@ footer {
     text-align: center;
 }
 
+@media screen and (max-width: 600px){
+    #banner .desc {
+        font-size: 3rem;
+        line-height: 50px;
+        top: 20%;
+    }
+}
+
 h1 {
     color: deepskyblue;
 }
 
-.text-section {
+.content-section {
     padding: 30px;
 }
 
@@ -40,6 +48,9 @@ h1 {
 }
 
 .ui, .card {
-    display:inline-block;
+    margin: 100px;
 }
 
+.flex-section {
+    display: flex;
+}

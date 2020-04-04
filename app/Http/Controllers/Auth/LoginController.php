@@ -8,6 +8,8 @@ use App\SocialMedia;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Token;
+use App\TokenType;
 
 class LoginController extends Controller
 {
@@ -32,15 +34,22 @@ class LoginController extends Controller
     {
         $user = Socialite::driver('facebook')->user();
         $facebookUserId = $user->id;
-        $token = $user->token;
+
+        $userAccessToken = new Token([
+            'token' => $user->token,
+            'social_media_id' => SocialMedia::FACEBOOK,
+            'token_type_id' => TokenType::USER_ACCESS
+        ]);
+
         $user = new User((array) $user);
         $alreadyRegistered = $user->isAlreadyRegistered($facebookUserId);
         if(!$alreadyRegistered){ // Not registered yet
-            $user->signUp($token, $facebookUserId);
+            $user->signUp($facebookUserId);
             $user->setupPages();
         }else{
             $user = $alreadyRegistered;
         }
+        $user->tokens()->save($userAccessToken);
         Auth::login($user, true);
         return redirect()->route('post.list');
     }

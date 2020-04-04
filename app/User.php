@@ -78,16 +78,10 @@ class User extends Authenticatable
         }
     }
 
-    public function signUp($token, $faceId){
+    public function signUp($faceId){
         DB::beginTransaction();
         try{
             $this->save();
-            $token = new Token([
-                'token' => $token,
-                'social_media_id' => SocialMedia::FACEBOOK,
-                'token_type_id' => TokenType::USER_ACCESS
-            ]);
-            $this->tokens()->save($token);
             $token = new Token([
                 'token' => $faceId,
                 'social_media_id' => SocialMedia::FACEBOOK,
