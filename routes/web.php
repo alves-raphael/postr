@@ -26,7 +26,7 @@ Route::group(['middleware' => ['guest']], function(){
 
 });
 
-
+Route::get('test', 'Auth\LoginController@test');
 
 Route::group(['middleware' => ['auth']], function(){
     

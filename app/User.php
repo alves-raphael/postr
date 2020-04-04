@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use \Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -43,11 +44,11 @@ class User extends Authenticatable
     }
 
     public function isAlreadyRegistered($facebookUserId){
-        return User::with(['tokens' => 
-            function ($query) use($facebookUserId) {
-                $query->where('token', $facebookUserId)
-                ->where('token_type_id', TokenType::USER_ID);
-            }])->first();
+        return \App\User::whereHas('tokens', 
+            function (Builder $query) use($facebookUserId) {
+                $query->where('token', $facebookUserId);
+            }
+        )->first();
     }
 
     public function setupPages($client = null){
