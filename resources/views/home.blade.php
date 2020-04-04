@@ -9,8 +9,20 @@
     <title>Postr - home</title>
 </head>
 <body>
+    <div class="ui sidebar inverted vertical menu">
+        @include('includes.navbar')
+    </div>
+    <div class="pusher">
     
-    @include('includes.navbar')
+    <nav id="menu">
+        <div>
+            <span id="logo">Postr</span>
+        </div>
+        <div class="links">
+            @include('includes.navbar')
+        <button id="sidebar-btn"><i class="icon bars"></i></button>
+        </div>
+    </nav>
     <section id="banner">
         <div class="desc">
             Automatize sua campanha de marketing em redes socias
@@ -89,9 +101,15 @@
     <footer>
         {{date("Y")}}
     </footer>
+</div>
     <script src="{{asset('js/main.js')}}"></script>
     <script src="{{asset('js/jquery.min.js')}}"></script>
     <script src="{{asset('semanticui/semantic.min.js')}}"></script>
     <script src="{{asset('js/functions.js')}}"></script>
+    <script>
+        $('#sidebar-btn').click(function(){
+            $('.ui.sidebar').sidebar('toggle');
+        });
+    </script>
 </body>
 </html>
