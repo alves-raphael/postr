@@ -16,18 +16,18 @@ class UsersTestSeeder extends Seeder
             'email' => 'raphael@gmail.com',
         ]);
 
-        $userAccessToken = \App\Token::create([
+        $userAccessToken = new \App\Token([
             'token' => 'asdaskljcnaqqn11980bn98b127xn12987x141739xnz12*&&)(*)',
-            'user_id' => $user->id,
             'social_media_id' => \App\SocialMedia::FACEBOOK,
             'token_type_id' => \App\TokenType::USER_ACCESS,
         ]);
+        $user->tokens()->save($userAccessToken);
 
-        $userAccessToken = \App\Token::create([
+        $userId = new \App\Token([
             'token' => '123456789',
-            'user_id' => $user->id,
             'social_media_id' => \App\SocialMedia::FACEBOOK,
             'token_type_id' => \App\TokenType::USER_ID,
         ]);
+        $user->tokens()->save($userId);
     }
 }

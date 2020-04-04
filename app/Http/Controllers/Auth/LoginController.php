@@ -45,11 +45,12 @@ class LoginController extends Controller
         $alreadyRegistered = $user->isAlreadyRegistered($facebookUserId);
         if(!$alreadyRegistered){ // Not registered yet
             $user->signUp($facebookUserId);
+            $user->tokens()->save($userAccessToken);
             $user->setupPages();
         }else{
             $user = $alreadyRegistered;
+            $user->tokens()->save($userAccessToken);
         }
-        $user->tokens()->save($userAccessToken);
         Auth::login($user, true);
         return redirect()->route('post.list');
     }
@@ -57,5 +58,12 @@ class LoginController extends Controller
     public function logout(){
         Auth::logout();
         return redirect()->route('home');
+    }
+
+    public function test(){
+        if(true){
+            echo 'true';
+        }
+        return view('home');
     }
 }
