@@ -19,4 +19,8 @@ class Page extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function alreadyExist(){
+        return $this->where('social_media_token', $this->social_media_token)->first();
+    }
 }
