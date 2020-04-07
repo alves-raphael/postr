@@ -64,7 +64,12 @@ class User extends Authenticatable
                 $page = new Page();
                 $page->name = $item->name;
                 $page->social_media_token = $item->id;
-                $this->pages()->save($page);
+
+                if($page->alreadyExist()){
+                    $page = $page->alreadyExist();
+                } else {
+                    $this->pages()->save($page);
+                }
 
                 $token = new Token([
                     'token' => $item->access_token,
