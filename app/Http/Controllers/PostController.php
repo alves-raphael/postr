@@ -43,7 +43,7 @@ class PostController extends Controller
             }
         }
 
-        // validar se o mesmos posts já não foram publicados
+        // Check if the same posts have already been published
         if(!empty($published)){
             $ids = implode(",", $published);
             $response['messages'][] = "The posts with the id {$ids} have already been published. Please try again";

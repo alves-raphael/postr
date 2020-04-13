@@ -42,7 +42,9 @@ class Post extends Model
     public function isScheduled(){
         return !empty($this->publication);
     }
-
+    /**
+     * Publish post in social media
+     */
     public function publish($client = null){
         $page = $this->page()->first();
         $pageAccessToken = $page->tokens()->where('valid', true)->first()->token;

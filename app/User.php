@@ -27,9 +27,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-    // protected $hidden = [
-    //     'password', 'remember_token',
-    // ];
+     protected $hidden = [
+         'remember_token'
+     ];
 
     public function tokens(){
         return $this->hasMany(Token::class);
@@ -44,7 +44,7 @@ class User extends Authenticatable
     }
 
     public function isAlreadyRegistered($facebookUserId){
-        return \App\User::whereHas('tokens', 
+        return \App\User::whereHas('tokens',
             function (Builder $query) use($facebookUserId) {
                 $query->where('token', $facebookUserId);
             }
@@ -61,15 +61,13 @@ class User extends Authenticatable
             $response = $client->request('GET', $url);
             $response = json_decode($response->getBody())->data;
             foreach($response as $item){
-                $page = new Page();
-                $page->name = $item->name;
-                $page->social_media_token = $item->id;
+                $page = new Page([
+                    'name' => $item->name,
+                    'social_media_token' => $item->id
+                ]);
 
-                if($page->alreadyExist()){
-                    $page = $page->alreadyExist();
-                } else {
-                    $this->pages()->save($page);
-                }
+                $page = $page->getFetchedOrItself();
+                $this->pages()->save($page);
 
                 $token = new Token([
                     'token' => $item->access_token,
