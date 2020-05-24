@@ -44,14 +44,6 @@ class User extends Authenticatable
         return $this->hasMany(Page::class);
     }
 
-    public function isAlreadyRegistered($facebookUserId){
-        return \App\User::whereHas('tokens',
-            function (Builder $query) use($facebookUserId) {
-                $query->where('token', $facebookUserId);
-            }
-        )->first();
-    }
-
     public function setupPages($client = null){
         $userId = $this->getLastValidToken(TokenType::USER_ID)->token;
         $userAccessToken = $this->getLastValidToken(TokenType::USER_ACCESS)->token;
@@ -90,7 +82,7 @@ class User extends Authenticatable
             $token = (new Token([
                 'token' => $faceId,
                 'token_type_id' => TokenType::USER_ID
-            ]))->socialMedia(new Facebook());
+            ]))->setSocialMedia(new Facebook());
 
             $this->tokens()->save($token);
             DB::commit();

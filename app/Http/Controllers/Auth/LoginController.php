@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
 use App\SocialMedia\SocialMedia;
+use App\User;
+use Laravel\Socialite\AbstractUser;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -31,27 +32,15 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback(Request $request)
+    public function handleFacebookCallback()
     {
         $user = Socialite::driver('facebook')->user();
-        $facebookUserId = $user->id;
+        return $this->login(new Facebook(), $user);
+    }
 
-        $userAccessToken = (new Token([
-            'token' => $user->token,
-            'token_type_id' => TokenType::USER_ACCESS
-        ]))->setSocialMedia(new Facebook());
-
-        $user = new User((array) $user);
-        $alreadyRegistered = $user->isAlreadyRegistered($facebookUserId);
-        if(!$alreadyRegistered){ // Not registered yet
-            $user->signUp($facebookUserId);
-            $user->tokens()->save($userAccessToken);
-            $user->setupPages();
-        }else{
-            $user = $alreadyRegistered;
-            $user->tokens()->save($userAccessToken);
-        }
-        Auth::login($user, true);
+    private function login(SocialMedia $socialMedia, AbstractUser $user){
+        $user = $socialMedia->signUser($user);
+        Auth::login($user);
         return redirect()->route('post.list');
     }
 
