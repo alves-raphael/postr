@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\User;
-use App\SocialMedia;
+use App\SocialMedia\SocialMedia;
 use Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Token;
 use App\TokenType;
+use App\SocialMedia\Facebook;
 
 class LoginController extends Controller
 {
@@ -35,11 +36,10 @@ class LoginController extends Controller
         $user = Socialite::driver('facebook')->user();
         $facebookUserId = $user->id;
 
-        $userAccessToken = new Token([
+        $userAccessToken = (new Token([
             'token' => $user->token,
-            'social_media_id' => SocialMedia::FACEBOOK,
             'token_type_id' => TokenType::USER_ACCESS
-        ]);
+        ]))->setSocialMedia(new Facebook());
 
         $user = new User((array) $user);
         $alreadyRegistered = $user->isAlreadyRegistered($facebookUserId);
@@ -58,12 +58,5 @@ class LoginController extends Controller
     public function logout(){
         Auth::logout();
         return redirect()->route('home');
-    }
-
-    public function test(){
-        if(true){
-            echo 'true';
-        }
-        return view('home');
     }
 }

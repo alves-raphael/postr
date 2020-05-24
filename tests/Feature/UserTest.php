@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\User;
 use App\Token;
-use App\SocialMedia;
+use App\SocialMedia\SocialMedia;
 use App\Page;
 use Mockery;
 use Illuminate\Support\Facades\Auth;

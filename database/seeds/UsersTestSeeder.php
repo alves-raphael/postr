@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\SocialMedia\Facebook;
 
 class UsersTestSeeder extends Seeder
 {
@@ -18,16 +19,16 @@ class UsersTestSeeder extends Seeder
 
         $userAccessToken = new \App\Token([
             'token' => 'asdaskljcnaqqn11980bn98b127xn12987x141739xnz12*&&)(*)',
-            'social_media_id' => \App\SocialMedia::FACEBOOK,
             'token_type_id' => \App\TokenType::USER_ACCESS,
         ]);
+        $userAccessToken->setSocialMedia(new Facebook());
         $user->tokens()->save($userAccessToken);
 
         $userId = new \App\Token([
             'token' => '123456789',
-            'social_media_id' => \App\SocialMedia::FACEBOOK,
             'token_type_id' => \App\TokenType::USER_ID,
         ]);
+        $userId->setSocialMedia(new Facebook());
         $user->tokens()->save($userId);
     }
 }

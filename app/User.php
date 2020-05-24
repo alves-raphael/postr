@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Database\Eloquent\Builder;
+use App\SocialMedia\Facebook;
 
 class User extends Authenticatable
 {
@@ -71,10 +72,10 @@ class User extends Authenticatable
 
                 $token = new Token([
                     'token' => $item->access_token,
-                    'social_media_id' => SocialMedia::FACEBOOK,
                     'token_type_id' => TokenType::PAGE_ACCESS,
                     'user_id' => $this->id
                 ]);
+                $token->setSocialMedia(new Facebook());
                 $page->tokens()->save($token);
             }
         } catch (\Exception $e){
@@ -86,11 +87,11 @@ class User extends Authenticatable
         DB::beginTransaction();
         try{
             $this->save();
-            $token = new Token([
+            $token = (new Token([
                 'token' => $faceId,
-                'social_media_id' => SocialMedia::FACEBOOK,
                 'token_type_id' => TokenType::USER_ID
-            ]);
+            ]))->socialMedia(new Facebook());
+
             $this->tokens()->save($token);
             DB::commit();
         } catch(\Exception $e){

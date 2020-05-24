@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\SocialMedia;
+use App\SocialMedia\Facebook;
 use App\TokenType;
 use App\Post;
 use Mockery;
@@ -30,20 +30,20 @@ class PostTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $token = \App\Token::create([
+        $token = [
             'token' => 'ankd98(*&(*NbhjBN(&h98&(&**YV564c65vbvb%$VE',
             'user_id' => $user->id,
-            'social_media_id' => SocialMedia::FACEBOOK,
             'token_type_id' => TokenType::PAGE_ACCESS,
-            'page_id' => $page->id
-        ]);
-        $token->page()->associate($page);
+        ];
+        $token = (new \App\Token($token))
+                ->setSocialMedia(new Facebook())
+                ->setPage($page);
         $token->save();
 
         $post = new Post();
         $post->title = 'publicação de teste';
         $post->body = 'Lorem Ipsum Dolor';
-        $post->social_media_id = SocialMedia::FACEBOOK;
+        $post->setSocialMedia(new Facebook());
         $page->posts()->save($post);
 
         $facebookFakeResponse = '{"id": "123456789_1810399758992730"}';

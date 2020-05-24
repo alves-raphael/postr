@@ -3,10 +3,32 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\SocialMedia\SocialMedia;
 
 class Token extends Model
 {
-    protected $fillable = ['token', 'user_id', 'social_media_id', 'valid', 'token_type_id'];
+    protected $fillable = ['token', 'user_id', 'social_media_id', 'valid', 'token_type_id', 'page_id'];
+
+    protected $guarded = ['page'];
+
+    private $socialMedia;
+
+    /**
+     * @var App\Page
+     */
+    private $page;
+
+    public function setSocialMedia(SocialMedia $socialMedia){
+        $this->socialMedia = $socialMedia;
+        $this->social_media_id = $socialMedia->getId();
+        return $this;
+    }
+
+    public function setPage(Page $page){
+        $this->page = $page;
+        $this->page_id = $page->id;
+        return $this;
+    }
 
     public function socialMedia(){
         return $this->belongsTo(SocialMedia::class);
