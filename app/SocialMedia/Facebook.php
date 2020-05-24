@@ -24,11 +24,6 @@ class Facebook extends SocialMedia {
         ]))->setSocialMedia(new Facebook());
 
         $user = User::firstOrNew((array) $abstractUser);
-        $didntExist = !$user->exists;
-        $user->save();
-        if($didntExist){
-            $user->setupPages();
-        }
         return $user;
     }
 }

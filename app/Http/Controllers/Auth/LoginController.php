@@ -40,8 +40,12 @@ class LoginController extends Controller
 
     private function login(SocialMedia $socialMedia, AbstractUser $user){
         $user = $socialMedia->signUser($user);
+        $didntExist = !$user->exists;
+        $user->save();
         Auth::login($user);
-        return redirect()->route('post.list');
+        $route = $didntExist ? 'page.create' : 'post.list';
+        return redirect()->route($route);
+        
     }
 
     public function logout(){
