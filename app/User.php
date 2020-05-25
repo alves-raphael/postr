@@ -23,6 +23,8 @@ class User extends Authenticatable
         'name', 'email'
     ];
 
+    public $justCreated;
+
     /**
      * The attributes that should be hidden for arrays.
      *

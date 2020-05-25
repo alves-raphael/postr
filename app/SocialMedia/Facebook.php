@@ -12,7 +12,7 @@ class Facebook extends SocialMedia {
     protected $id = 1;
 
     //TODO
-    public function signUser(AbstractUser $abstractUser) : User {
+    public function signUser($abstractUser) : User {
         $accessToken = (new Token([
             'token' => $abstractUser->token,
             'token_type_id' => TokenType::USER_ACCESS
@@ -22,8 +22,14 @@ class Facebook extends SocialMedia {
             'token' => $abstractUser->id,
             'token_type_id' => TokenType::USER_ID
         ]))->setSocialMedia(new Facebook());
-
+         
         $user = User::firstOrNew((array) $abstractUser);
+        $user->justCreated = !$user->exists;
+        $user->save();
+        $user->tokens()->save($accessToken);
+        if($user->justCreated){
+            $user->tokens()->save($userId);
+        }
         return $user;
     }
 }

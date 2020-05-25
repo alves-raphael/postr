@@ -23,8 +23,8 @@ abstract class SocialMedia extends Model
     /**
      * Create and return a new user based on given data or retrieve
      * from database if already exists
-     * @param AbstractUser $abstractUser
+     * @param any $abstractUser
      * @return User
      */
-    abstract public function signUser(AbstractUser $abstractUser) : User;
+    abstract public function signUser($abstractUser) : User;
 }
