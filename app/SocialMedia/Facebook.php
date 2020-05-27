@@ -7,7 +7,7 @@ use App\TokenType;
 use App\User;
 use Laravel\Socialite\AbstractUser;
 
-class Facebook extends SocialMedia {
+class Facebook extends SocialMedia implements ISocialMedia {
 
     protected $id = 1;
 
@@ -23,7 +23,10 @@ class Facebook extends SocialMedia {
             'token_type_id' => TokenType::USER_ID
         ]))->setSocialMedia(new Facebook());
          
-        $user = User::firstOrNew((array) $abstractUser);
+        $user = User::firstOrNew([
+                'name' => $abstractUser->name,
+                'email' => $abstractUser->email
+            ]);
         $user->justCreated = !$user->exists;
         $user->save();
         $user->tokens()->save($accessToken);

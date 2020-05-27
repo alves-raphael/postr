@@ -27,7 +27,7 @@ class FacebookTest extends TestCase
         $fakeUser->email = $fakeData->email;
         $facebook = new Facebook();
         $fakeUser = $facebook->signUser($fakeUser);
-        
+
         $this->assertTrue($fakeUser instanceof User);
         $this->assertEquals($fakeUser->tokens()->where('token_type_id', TokenType::USER_ID)->first()->token, "324984894894984");
         $this->assertEquals($fakeUser->tokens()->where('token_type_id', TokenType::USER_ACCESS)->first()->token, "12132432423412312312");
