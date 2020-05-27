@@ -7,6 +7,7 @@
     <table class="ui celled striped table">
         <thead>
             <tr>
+                <th> ID </th>
                 <th> Título </th>
                 <th> Publicação </th>
                 <th> Página </th>
@@ -15,6 +16,7 @@
         <tbody>
             @foreach ($posts as $post)
                 <tr>
+                    <td>{{$post->id}}</td>
                     <td>{{$post->title}}</td>
                     <td>{{$post->publication->format('d/m/Y H:i')}}</td>
                     <td>{{$post->page()->first()->name}}</td>
