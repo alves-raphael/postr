@@ -24,7 +24,16 @@ class PostController extends Controller
             $post->publish();
             $extra = 'e publicada';
         }
-        return redirect()->back()->with('success', "Publicação criada {$extra} com successo");
+        return redirect()->route('post.list')->with('success', "Publicação criada {$extra} com successo");
+    }
+
+    public function list(){
+        $pages = Auth::user()->pages()->get();
+        $posts = [];
+        foreach($pages as $page){
+            $posts = array_merge($posts, $page->posts()->get()->all());
+        }
+        return view('post.list', ['posts' => $posts]);
     }
 
     public function publish(Request $request){

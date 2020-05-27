@@ -30,9 +30,7 @@ Route::get('test', 'Auth\LoginController@test');
 
 Route::group(['middleware' => ['auth']], function(){
 
-    Route::get('posts/list', function(){
-        return view('post.list');
-    })->name('post.list');
+    Route::get('posts/list', "PostController@list")->name('post.list');
 
     Route::get('posts/create', "PostController@creation")->name('post.create');
 

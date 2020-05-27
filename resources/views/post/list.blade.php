@@ -7,35 +7,19 @@
     <table class="ui celled striped table">
         <thead>
             <tr>
-                <th>
-                    Sample 1
-                </th>
-                <th>
-                    Sample 2
-                </th>
+                <th> Título </th>
+                <th> Publicação </th>
+                <th> Página </th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Initial commit</td>
-                <td class="right aligned collapsing">10 hours ago</td>
-            </tr>
-            <tr>
-                <td>Initial commit</td>
-                <td class="right aligned">10 hours ago</td>
-            </tr>
-            <tr>
-                <td>Initial commit</td>
-                <td class="right aligned">10 hours ago</td>
-            </tr>
-            <tr>
-                <td>Initial commit</td>
-                <td class="right aligned">10 hours ago</td>
-            </tr>
-            <tr>
-                <td>Initial commit</td>
-                <td class="right aligned">10 hours ago</td>
-            </tr>
+            @foreach ($posts as $post)
+                <tr>
+                    <td>{{$post->title}}</td>
+                    <td>{{$post->publication->format('d/m/Y H:i')}}</td>
+                    <td>{{$post->page()->first()->name}}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 @endsection
