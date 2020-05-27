@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\SocialMedia\SocialMedia;
 use Guzzle\HttpGuzzle;
 
 class Post extends Model
@@ -14,6 +15,14 @@ class Post extends Model
     ];
 
     protected $dates = ['publication', 'created_at','updated_at'];
+
+    private $socialMedia;
+
+    public function setSocialMedia(SocialMedia $socialMedia){
+        $this->socialMedia = $socialMedia;
+        $this->social_media_id = $socialMedia->getId();
+        return $this;
+    }
 
     public function page(){
         return $this->belongsTo(Page::class);
@@ -43,6 +52,9 @@ class Post extends Model
         return !empty($this->publication);
     }
 
+    /**
+     * Publish post in social media
+     */
     public function publish($client = null){
         $page = $this->page()->first();
         $pageAccessToken = $page->tokens()->where('valid', true)->first()->token;

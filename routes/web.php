@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback')->name('facebook.callback');
+Route::get('login/facebook/callback', 'Auth\LoginController@handleFacebookCallback')->name('facebook.callback');
 
 
 Route::group(['middleware' => ['guest']], function(){
-    
+
     Route::get('/', function () {
         return view('home');
     })->name('home');
@@ -29,15 +29,17 @@ Route::group(['middleware' => ['guest']], function(){
 Route::get('test', 'Auth\LoginController@test');
 
 Route::group(['middleware' => ['auth']], function(){
-    
+
     Route::get('posts/list', function(){
         return view('post.list');
     })->name('post.list');
-    
+
     Route::get('posts/create', "PostController@creation")->name('post.create');
-    
+
     Route::post('posts/create', "PostController@create")->name('post.create.new');
 
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
+    Route::get('page/create', 'PageController@createMany')->name('page.create');
 
 });
