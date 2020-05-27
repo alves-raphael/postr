@@ -27,8 +27,9 @@ class PostTest extends TestCase
         $page = \App\Page::create([
             'name' => 'random page',
             'social_media_token' => '123456789',
-            'user_id' => $user->id
         ]);
+
+        $user->pages()->attach($page->id);
 
         $token = [
             'token' => 'ankd98(*&(*NbhjBN(&h98&(&**YV564c65vbvb%$VE',

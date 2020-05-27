@@ -17,10 +17,7 @@ class CreatePagesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('social_media_token')->unique();
-            $table->unsignedInteger('user_id');
-            $table->timestamps();
-            
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps(); 
         });
     }
 

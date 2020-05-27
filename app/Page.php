@@ -20,22 +20,11 @@ class Page extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function alreadyExist() : boolean 
     {
         return !empty($this->where('social_media_token', $this->social_media_token)->first());
-    }
-
-    /**
-     * Search for page with the given attributes. 
-     * if no one was found, return itself
-     * @return App\Page
-     */
-    public function getFetchedOrItself()
-    {
-        $fetched = $this->where('social_media_token', $this->social_media_token)->first();
-        return $fetched ? : $this;
     }
 }

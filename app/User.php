@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Database\Eloquent\Builder;
 use App\SocialMedia\Facebook;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -43,7 +44,7 @@ class User extends Authenticatable
     }
 
     public function pages(){
-        return $this->hasMany(Page::class);
+        return $this->belongsToMany(Page::class);
     }
 
     public function setupPages($client = null){
@@ -52,46 +53,50 @@ class User extends Authenticatable
         $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccessToken}";
         $client = $client ? : new \GuzzleHttp\Client();
         $response = null;
-        try {
-            $response = $client->request('GET', $url);
-            $response = json_decode($response->getBody())->data;
-            foreach($response as $item){
-                $page = new Page([
-                    'name' => $item->name,
-                    'social_media_token' => $item->id
-                ]);
+        
+        $response = $client->request('GET', $url);
+        $response = json_decode($response->getBody())->data;
+        foreach($response as $item){
+            $page = Page::firstOrCreate([
+                'name' => $item->name,
+                'social_media_token' => $item->id
+            ]);
+            
+            $this->pages()->attach($page->id);
 
-                $page = $page->getFetchedOrItself();
-                $this->pages()->save($page);
-
-                $token = new Token([
-                    'token' => $item->access_token,
-                    'token_type_id' => TokenType::PAGE_ACCESS,
-                    'user_id' => $this->id
-                ]);
-                $token->setSocialMedia(new Facebook());
-                $page->tokens()->save($token);
-            }
-        } catch (\Exception $e){
-            dd($e->getMessage());
+            $token = (new Token([
+                'token' => $item->access_token,
+                'token_type_id' => TokenType::PAGE_ACCESS,
+                'user_id' => $this->id
+            ]))->setSocialMedia(new Facebook());
+            
+            $page->tokens()->save($token);
         }
+        
     }
 
-    public function signUp($faceId){
-        DB::beginTransaction();
-        try{
-            $this->save();
-            $token = (new Token([
-                'token' => $faceId,
-                'token_type_id' => TokenType::USER_ID
-            ]))->setSocialMedia(new Facebook());
+    public static function createRandom(){
+        $rand = rand(0,100);
+        $user = \App\User::create([
+            'name' => 'testuser' . $rand,
+            'email' => "raphael{$rand}@gmail.com",
+        ]);
 
-            $this->tokens()->save($token);
-            DB::commit();
-        } catch(\Exception $e){
-            DB::rollback();
-            throw $e;
-        }
+        $userAccessToken = new Token([
+            'token' => Str::random(40),
+            'token_type_id' => TokenType::USER_ACCESS,
+        ]);
+        $userAccessToken->setSocialMedia(new Facebook());
+        $user->tokens()->save($userAccessToken);
+
+        $userId = new Token([
+            'token' => Str::random(40),
+            'token_type_id' => TokenType::USER_ID,
+        ]);
+
+        $userId->setSocialMedia(new Facebook());
+        $user->tokens()->save($userId);
+        return $user;
     }
 
     public function getUserId(){
