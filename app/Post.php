@@ -76,6 +76,6 @@ class Post extends Model
     public function isEditable() : bool 
     {
         $fiveMinFromNow = (new DateTime())->add(new \DateInterval('PT5M'));
-        return $fiveMinFromNow >= $this->publication;
+        return $fiveMinFromNow <= $this->publication;
     }
 }
