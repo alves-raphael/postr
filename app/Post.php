@@ -39,9 +39,9 @@ class Post extends Model
             'publication' => [
                 function($attr, $date, $fail){
                     $date = new \DateTime($date);
-                    $now = new \DateTime();
+                    $now = (new \DateTime())->add(new \DateInterval('PT5M'));
                     if($date < $now){
-                        return $fail('Data de publicação não pode ser inferior a data de hoje.');
+                        return $fail('Data de publicação precisa ter 5 minutos de antecedência.');
                     }
                 }
             ]
