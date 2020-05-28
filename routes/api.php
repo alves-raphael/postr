@@ -15,7 +15,3 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->post('/posts/publish', "PostController@publish");
-
-Route::get('/test', function(){
-    echo 'Hello World';
-});

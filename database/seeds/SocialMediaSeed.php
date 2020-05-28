@@ -15,9 +15,7 @@ class SocialMediaSeed extends Seeder
         DB::table('social_media')->insert(
             ['name' => 'Facebook']
         );
-        DB::table('social_media')->insert(
-            ['name' => 'Twitter']
-        );
+
         DB::table('token_types')->insert(
             ['name' => 'User']
         );

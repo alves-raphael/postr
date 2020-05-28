@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\SocialMedia\SocialMedia;
 use Guzzle\HttpGuzzle;
+use DateTime;
 
 class Post extends Model
 {
@@ -38,8 +39,8 @@ class Post extends Model
             'body' => 'required',
             'publication' => [
                 function($attr, $date, $fail){
-                    $date = new \DateTime($date);
-                    $now = (new \DateTime())->add(new \DateInterval('PT5M'));
+                    $date = new DateTime($date);
+                    $now = (new DateTime())->add(new \DateInterval('PT5M')); // now + 5min
                     if($date < $now){
                         return $fail('Data de publicação precisa ter 5 minutos de antecedência.');
                     }
@@ -70,5 +71,11 @@ class Post extends Model
         } catch (\Exception $e){
             dd($e->getMessage());
         }
+    }
+
+    public function isEditable() : bool 
+    {
+        $fiveMinFromNow = (new DateTime())->add(new \DateInterval('PT5M'));
+        return $fiveMinFromNow >= $this->publication;
     }
 }

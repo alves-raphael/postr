@@ -66,4 +66,24 @@ class PostController extends Controller
         $response['messages'][] = 'Posts have been published with success!';
         return response()->json($response)->setStatusCode(200);
     }
+
+    public function editView($id){
+        $post = Post::find($id);
+
+        if(empty($post)){
+            return redirect()->back()->with('fail', 'Não foi possível efetuar a operação');
+        }
+
+        $post->socialMediaId = $post->socialMedia()->first()->id;
+        $post->pageId = $post->page()->first()->id;
+
+        $data = [
+            'post' => $post,
+            'socialMedias' => SocialMedia::all(),
+            'pages' => Auth::user()->pages()->get(),
+            'disabled' => $post->isEditable() ? 'disabled' : ''
+        ];
+
+        return view('post.edit', $data);
+    }
 }
