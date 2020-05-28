@@ -25,6 +25,10 @@ class Post extends Model
         return $this;
     }
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     public function page(){
         return $this->belongsTo(Page::class);
     }
@@ -62,15 +66,13 @@ class Post extends Model
         $body = \urlencode($this->body);
         $url = "https://graph.facebook.com/{$page->social_media_token}/feed?message={$body}&access_token={$pageAccessToken}";
         $client = $client ? : new \GuzzleHttp\Client();
-        try{
-            $response = $client->request('POST', $url);
-            $response = json_decode($response->getBody());
-            $this->social_media_token = $response->id;
-            $this->published = true;
-            $this->save();
-        } catch (\Exception $e){
-            dd($e->getMessage());
-        }
+        
+        $response = $client->request('POST', $url);
+        $response = json_decode($response->getBody());
+        $this->social_media_token = $response->id;
+        $this->published = true;
+        $this->save();
+        
     }
 
     public function isEditable() : bool 

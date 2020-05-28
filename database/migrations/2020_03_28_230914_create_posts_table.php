@@ -22,11 +22,13 @@ class CreatePostsTable extends Migration
             $table->unsignedInteger('topic_id')->nullable();
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('page_id');
+            $table->unsignedInteger('user_id');
             $table->string('social_media_token')->nullable();
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');
             $table->foreign('page_id')->references('id')->on('pages');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

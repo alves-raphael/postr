@@ -47,6 +47,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Page::class);
     }
 
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
+
     public function setupPages($client = null){
         $userId = $this->getLastValidToken(TokenType::USER_ID)->token;
         $userAccessToken = $this->getLastValidToken(TokenType::USER_ACCESS)->token;
