@@ -10,6 +10,7 @@
                 <th> ID </th>
                 <th> Título </th>
                 <th> Publicação </th>
+                <th> Publicada </th>
                 <th> Página </th>
                 <th> Ações </th>
             </tr>
@@ -20,8 +21,9 @@
                     <td>{{$post->id}}</td>
                     <td>{{$post->title}}</td>
                     <td>{{$post->publication->format('d/m/Y H:i')}}</td>
+                    <td class="centered"><i class="{{ $post->published ? 'check green' : 'close red' }} icon"></i></td>
                     <td>{{$post->page()->first()->name}}</td>
-                    <td>
+                    <td class="centered">
                         <a class="icon" href="{{route('post.edit.view', $post->id)}}" data-content="Editar/Detalhes">
                             <i class="edit icon action"></i>
                         </a>
