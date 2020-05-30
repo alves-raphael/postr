@@ -88,11 +88,12 @@ class PostController extends Controller
     }
 
     public function edit(int $id, Request $request){
-        $post = Auth::user()->posts()->find($id)->first();
+        $post = Auth::user()->posts()->find($id);
+
         if(empty($post) || !$post->isEditable()){
             return redirect()->back()->with('fail', 'Essa publicação já não pode mais ser editada');
         }
         $post->update($request->all());
-        return redirect()->back()->with('success', 'Publicação foi editada com sucesso!');
+        return redirect()->route('post.list')->with('success', 'Publicação foi editada com sucesso!');
     }
 }

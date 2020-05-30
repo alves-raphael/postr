@@ -87,7 +87,6 @@ class Post extends Model
         $this->social_media_token = $response->id;
         $this->published = true;
         $this->save();
-        
     }
 
     public function isEditable() : bool 

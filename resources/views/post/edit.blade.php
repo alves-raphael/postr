@@ -3,7 +3,7 @@
 @section('title') Editar publicação @endsection
 
 @section('body')
-<form class="ui form"  method="post" action="{{''}}">
+<form class="ui form"  method="post" action="{{route('post.edit', $post->id)}}">
   @csrf
     <div class="three fields">
         <div class="field">
