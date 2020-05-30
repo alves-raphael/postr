@@ -21,7 +21,7 @@ class CreatePostsTable extends Migration
             $table->boolean('published')->default(false);
             $table->unsignedInteger('topic_id')->nullable();
             $table->unsignedInteger('social_media_id');
-            $table->unsignedInteger('page_id');
+            $table->unsignedInteger('page_id')->nullable();
             $table->unsignedInteger('user_id');
             $table->string('social_media_token')->nullable();
             $table->timestamps();

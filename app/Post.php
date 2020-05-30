@@ -18,6 +18,20 @@ class Post extends Model
     protected $dates = ['publication', 'created_at','updated_at'];
 
     private $socialMedia;
+    private $user;
+    private $page;
+
+    public function setPage(Page $page){
+        $this->page = $page;
+        $this->page_id = $page->id;
+        return $this;
+    }
+
+    public function setUser(User $user){
+        $this->user = $user;
+        $this->user_id = $user->id;
+        return $this;
+    }
 
     public function setSocialMedia(SocialMedia $socialMedia){
         $this->socialMedia = $socialMedia;

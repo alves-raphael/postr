@@ -80,10 +80,10 @@ class User extends Authenticatable
     }
 
     public static function createRandom(){
-        $rand = rand(0,100);
+        $rand = rand(0,999);
         $user = \App\User::create([
             'name' => 'testuser' . $rand,
-            'email' => "raphael{$rand}@gmail.com",
+            'email' => "test{$rand}@gmail.com",
         ]);
 
         $userAccessToken = new Token([
