@@ -7,8 +7,12 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\SocialMedia\Facebook;
 use App\TokenType;
+use App\User;
+use App\Http\Controllers\PostController;
 use App\Post;
 use Mockery;
+use App\Page;
+use Illuminate\Support\Facades\Auth;
 
 class PostTest extends TestCase
 {
@@ -22,9 +26,9 @@ class PostTest extends TestCase
     {
         $this->seed();
         $this->seed(\UsersTestSeeder::class);
-        $user = \App\User::first();
+        $user = User::first();
 
-        $page = \App\Page::create([
+        $page = Page::create([
             'name' => 'random page',
             'social_media_token' => '123456789',
         ]);
@@ -41,10 +45,13 @@ class PostTest extends TestCase
                 ->setPage($page);
         $token->save();
 
-        $post = new Post();
-        $post->title = 'publicação de teste';
-        $post->body = 'Lorem Ipsum Dolor';
-        $post->setSocialMedia(new Facebook());
+        $post = (new Post([
+            'title' => 'publicação de teste',
+            'body' => 'Lorem Ipsum Dolor'
+        ]))->setSocialMedia(new Facebook())
+        ->setUser($user);
+            
+
         $page->posts()->save($post);
 
         $facebookFakeResponse = '{"id": "123456789_1810399758992730"}';
@@ -58,4 +65,49 @@ class PostTest extends TestCase
         $this->assertTrue(!empty($post));
         $this->assertTrue($post->published);
     }
+
+    public function testEdit(){
+        $this->seed();
+        $user = User::createRandom();
+        Auth::login($user);
+        $post = (new Post([
+            'title' => 'publicação de test', 
+            'body' => 'Lorem ipsum dolor',
+        ]))->setSocialMedia(new Facebook());
+
+        $user->posts()->save($post);
+        
+        $response = $this->post('post/edit/'.$post->id, [
+            'title' => "publicação de teste alterada"
+        ]);
+
+        $post = Post::find($post->id);
+
+        $this->assertEquals($post->title, "publicação de teste alterada");
+        $response->assertStatus(302);
+    }
+
+    public function testTryEditPostFromSomeoneElse(){
+        $this->seed();
+        $user = User::createRandom();
+        Auth::login($user);
+        $post = (new Post([
+            'title' => 'publicação de test', 
+            'body' => 'Lorem ipsum dolor',
+        ]))->setSocialMedia(new Facebook());
+        $user->posts()->save($post);
+            
+        $anotherUser = User::createRandom();
+        $anotherPost = (new Post([
+            'title' => 'publicação de test 2', 
+            'body' => 'Lorem ipsum dolor 2',
+        ]))->setSocialMedia(new Facebook());
+        $anotherUser->posts()->save($anotherPost);
+        
+        $this->post('post/edit/'.$anotherPost->id, ['title' => 'titulo alterado']);
+        $anotherPost = Post::find($anotherPost->id);
+
+        $this->assertEquals('publicação de test 2', $anotherPost->title);
+    }
 }
+

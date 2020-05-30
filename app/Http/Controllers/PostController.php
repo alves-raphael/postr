@@ -81,9 +81,18 @@ class PostController extends Controller
             'post' => $post,
             'socialMedias' => SocialMedia::all(),
             'pages' => Auth::user()->pages()->get(),
-            'disabled' => $post->isEditable() ? 'disabled' : ''
+            'disabled' => $post->isEditable() ? '' : 'disabled'
         ];
 
         return view('post.edit', $data);
+    }
+
+    public function edit(int $id, Request $request){
+        $post = Auth::user()->posts()->find($id)->first();
+        if(empty($post) || !$post->isEditable()){
+            return redirect()->back()->with('fail', 'Essa publicação já não pode mais ser editada');
+        }
+        $post->update($request->all());
+        return redirect()->back()->with('success', 'Publicação foi editada com sucesso!');
     }
 }

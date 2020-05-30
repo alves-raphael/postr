@@ -42,4 +42,6 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('post/edit/{id}', 'PostController@editView')->name('post.edit.view');
 
+    Route::post('post/edit/{id}', 'PostController@edit')->name('post.edit');
+
 });
