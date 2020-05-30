@@ -18,7 +18,7 @@ class PostController extends Controller
     public function create(Request $request){
         $request->validate(Post::getRules());
         $post = new Post($request->all());
-        $post->save();
+        Auth::user()->posts()->save($post);
         $extra = '';
         if(!$post->isScheduled()){
             $post->publish();

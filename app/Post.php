@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\SocialMedia\SocialMedia;
 use Guzzle\HttpGuzzle;
+use Illuminate\Support\Carbon;
 use DateTime;
 
 class Post extends Model
@@ -91,7 +92,7 @@ class Post extends Model
 
     public function isEditable() : bool 
     {
-        $fiveMinFromNow = (new DateTime())->add(new \DateInterval('PT5M'));
-        return $fiveMinFromNow <= $this->publication;
+        $fiveMinFromNow = new Carbon((new DateTime())->add(new \DateInterval('PT5M')));
+        return $fiveMinFromNow->lessThanOrEqualTo($this->publication);
     }
 }
