@@ -13,6 +13,7 @@ use App\Post;
 use Mockery;
 use App\Page;
 use Illuminate\Support\Facades\Auth;
+use DateTime;
 
 class PostTest extends TestCase
 {
@@ -108,6 +109,27 @@ class PostTest extends TestCase
         $anotherPost = Post::find($anotherPost->id);
 
         $this->assertEquals('publicação de test 2', $anotherPost->title);
+    }
+
+    public function testIsEditable(){
+        $this->seed();
+        $user = User::createRandom();
+        $postEditable = (new Post([
+            'title' => 'publicação de test', 
+            'body' => 'Lorem ipsum dolor',
+            'publication' => new DateTime('2020-08-09')
+        ]))->setSocialMedia(new Facebook());
+        $user->posts()->save($postEditable);
+
+        $notEditable = (new Post([
+            'title' => 'publicação de test', 
+            'body' => 'Lorem ipsum dolor',
+            'publication' => new DateTime('2020-01-09')
+        ]))->setSocialMedia(new Facebook());
+        $user->posts()->save($notEditable);
+
+        $this->assertTrue($postEditable->isEditable());
+        $this->assertFalse($notEditable->isEditable());
     }
 }
 
