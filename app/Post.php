@@ -86,6 +86,7 @@ class Post extends Model
         $response = json_decode($response->getBody());
         $this->social_media_token = $response->id;
         $this->published = true;
+        $this->publication = new DateTime();
         $this->save();
     }
 

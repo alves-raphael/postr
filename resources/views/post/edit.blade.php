@@ -45,9 +45,7 @@
       <input type="hidden" name="publication" id="publish" value="{{$post->publication->format('Y-m-d H:i')}}" disabled>
     </div>
     <div class="field">
-      <textarea name="body" id="" cols="30" rows="10" {{$disabled}}>
-        {{trim($post->body)}}
-      </textarea>
+      <textarea name="body" id="" cols="30" rows="10" {{$disabled}}>{{trim($post->body)}}</textarea>
     </div>
     <a class="ui button" href="{{route('post.list')}}"> <i class="icon arrow left"></i> Voltar</a>
     <button class="ui green button" type="submit" {{$disabled}}>Salvar</button>
