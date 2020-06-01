@@ -3,8 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\SocialMedia\SocialMedia;
-use Guzzle\HttpGuzzle;
+use App\SocialMedia\AbstractSocialMedia;
+use GuzzleHttp\Client;
 use Illuminate\Support\Carbon;
 use DateTime;
 
@@ -34,7 +34,7 @@ class Post extends Model
         return $this;
     }
 
-    public function setSocialMedia(SocialMedia $socialMedia){
+    public function setSocialMedia(AbstractSocialMedia $socialMedia){
         $this->socialMedia = $socialMedia;
         $this->social_media_id = $socialMedia->getId();
         return $this;
@@ -75,13 +75,13 @@ class Post extends Model
     /**
      * Publish post in social media
      */
-    public function publish($client = null){
+    public function publish(Client $client = null){
         $page = $this->page()->first();
         $pageAccessToken = $page->tokens()->where('valid', true)->first()->token;
         $body = \urlencode($this->body);
         $url = "https://graph.facebook.com/{$page->social_media_token}/feed?message={$body}&access_token={$pageAccessToken}";
-        $client = $client ? : new \GuzzleHttp\Client();
-        
+        $client = $client ? : new Client();
+
         $response = $client->request('POST', $url);
         $response = json_decode($response->getBody());
         $this->social_media_token = $response->id;

@@ -7,11 +7,10 @@ use App\TokenType;
 use App\User;
 use Laravel\Socialite\AbstractUser;
 
-class Facebook extends SocialMedia implements ISocialMedia {
+class Facebook extends AbstractSocialMedia {
 
     protected $id = 1;
 
-    //TODO
     public function signUser($abstractUser) : User {
         $accessToken = (new Token([
             'token' => $abstractUser->token,
