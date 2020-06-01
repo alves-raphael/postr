@@ -1,16 +1,13 @@
 
 var publish = $('#publish');
-var releaseDate = $('#release-date');
-var releaseHour = $('#release-hour');
+var dateTimeInputs = [$('#release-date'), $('#release-hour')];
 
 $('#send-now').change(function(){
     if (this.value == 'true'){
-        disable(releaseDate);
-        disable(releaseHour);
+        disableMany(dateTimeInputs);
         publish.prop("disabled", true);
     } else {
-        enable(releaseDate);
-        enable(releaseHour);
+        enableMany(dateTimeInputs);
         publish.prop("disabled", false);
         
     }

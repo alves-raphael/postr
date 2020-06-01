@@ -42,7 +42,7 @@
         <label>Hora da publicação</label>
         <input type="time" name="time" id="time" {{$disabled}} value="{{$post->publication->format('H:i')}}">
       </div>
-      <input type="hidden" name="publication" id="publish" value="{{$post->publication->format('Y-m-d H:i')}}" disabled>
+      <input type="hidden" name="publication" id="publish" value="{{$post->publication->format('Y-m-d H:i')}}" {{$disabled}}>
     </div>
     <div class="field">
       <textarea name="body" id="" cols="30" rows="10" {{$disabled}}>{{trim($post->body)}}</textarea>
