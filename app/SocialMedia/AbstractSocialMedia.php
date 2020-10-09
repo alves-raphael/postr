@@ -14,5 +14,9 @@ abstract class AbstractSocialMedia extends SocialMedia {
      */
     abstract function signUser($abstractUser) : User;
 
-    // abstract function publish(Post $post, $client);
+    /**
+     * Logic behind social media specific integration to publish a post
+     * @param Post $post - post to be sent
+     */
+    abstract function send(Post $post, $client) : void;
 }

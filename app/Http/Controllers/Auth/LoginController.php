@@ -43,7 +43,6 @@ class LoginController extends Controller
         Auth::login($user);
         $route = $user->justCreated ? 'page.create' : 'post.list';
         return redirect()->route($route);
-        
     }
 
     public function logout(){

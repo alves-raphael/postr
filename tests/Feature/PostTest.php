@@ -14,31 +14,34 @@ use Mockery;
 use App\Page;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
+use Illuminate\Support\Carbon;
 
 class PostTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
+
+    private $user;
+
+    public function setUp() : void {
+        parent::setUp();
+        $this->seed();
+        $this->user = User::createRandom();
+    }
+
     public function testPublish()
     {
-        $this->seed();
         $this->seed(\UsersTestSeeder::class);
-        $user = User::first();
 
         $page = Page::create([
             'name' => 'random page',
             'social_media_token' => '123456789',
         ]);
 
-        $user->pages()->attach($page->id);
+        $this->user->pages()->attach($page->id);
 
         $token = [
             'token' => 'ankd98(*&(*NbhjBN(&h98&(&**YV564c65vbvb%$VE',
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'token_type_id' => TokenType::PAGE_ACCESS,
         ];
         $token = (new \App\Token($token))
@@ -50,7 +53,7 @@ class PostTest extends TestCase
             'title' => 'publicação de teste',
             'body' => 'Lorem Ipsum Dolor'
         ]))->setSocialMedia(new Facebook())
-        ->setUser($user);
+        ->setUser($this->user);
             
 
         $page->posts()->save($post);
@@ -68,36 +71,32 @@ class PostTest extends TestCase
     }
 
     public function testEdit(){
-        $this->seed();
-        $user = User::createRandom();
-        Auth::login($user);
+        Auth::login($this->user);
         $post = (new Post([
             'title' => 'publicação de test', 
             'body' => 'Lorem ipsum dolor',
+            'publication' => new DateTime('2020-07-01')
         ]))->setSocialMedia(new Facebook());
 
-        $user->posts()->save($post);
+        $this->user->posts()->save($post);
         
         $response = $this->post('post/edit/'.$post->id, [
-            'title' => "publicação de teste alterada"
+            'title' => "publicação de teste alterada",
+            'body' => "Body changed",
+            'publication' => '2020-08-01 15:00'
         ]);
 
         $post = Post::find($post->id);
 
         $this->assertEquals($post->title, "publicação de teste alterada");
+        $this->assertEquals($post->body, "Body changed");
+        $this->assertEquals($post->publication->format('Y-m-d H:i'), "2020-08-01 15:00");
         $response->assertStatus(302);
     }
 
     public function testTryEditPostFromSomeoneElse(){
-        $this->seed();
-        $user = User::createRandom();
-        Auth::login($user);
-        $post = (new Post([
-            'title' => 'publicação de test', 
-            'body' => 'Lorem ipsum dolor',
-        ]))->setSocialMedia(new Facebook());
-        $user->posts()->save($post);
-            
+        Auth::login($this->user);
+
         $anotherUser = User::createRandom();
         $anotherPost = (new Post([
             'title' => 'publicação de test 2', 
@@ -105,31 +104,43 @@ class PostTest extends TestCase
         ]))->setSocialMedia(new Facebook());
         $anotherUser->posts()->save($anotherPost);
         
-        $this->post('post/edit/'.$anotherPost->id, ['title' => 'titulo alterado']);
+        $this->post('post/edit/'.$anotherPost->id, [
+            'title' => 'titulo alterado',
+            'body' => 'corpo alterado'
+            ]);
         $anotherPost = Post::find($anotherPost->id);
 
         $this->assertEquals('publicação de test 2', $anotherPost->title);
+        $this->assertEquals('Lorem ipsum dolor 2', $anotherPost->body);
     }
 
+    /**
+     * Check if Post::isEditable() works properly
+     */
     public function testIsEditable(){
-        $this->seed();
-        $user = User::createRandom();
         $postEditable = (new Post([
             'title' => 'publicação de test', 
             'body' => 'Lorem ipsum dolor',
             'publication' => new DateTime('2020-08-09')
         ]))->setSocialMedia(new Facebook());
-        $user->posts()->save($postEditable);
+        $this->user->posts()->save($postEditable);
 
         $notEditable = (new Post([
             'title' => 'publicação de test', 
             'body' => 'Lorem ipsum dolor',
             'publication' => new DateTime('2020-01-09')
         ]))->setSocialMedia(new Facebook());
-        $user->posts()->save($notEditable);
+        $this->user->posts()->save($notEditable);
 
         $this->assertTrue($postEditable->isEditable());
         $this->assertFalse($notEditable->isEditable());
+    }
+
+    /**
+     * The post that have already been published, shall not be edited
+     */
+    public function testEditAlreadyPublishedPost(){
+        
     }
 }
 

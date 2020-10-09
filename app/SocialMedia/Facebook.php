@@ -34,4 +34,5 @@ class Facebook extends AbstractSocialMedia {
         }
         return $user;
     }
+
 }

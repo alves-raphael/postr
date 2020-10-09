@@ -31,9 +31,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-     protected $hidden = [
-         'remember_token'
-     ];
+    protected $hidden = [
+        'remember_token'
+    ];
 
     public function tokens(){
         return $this->hasMany(Token::class);
