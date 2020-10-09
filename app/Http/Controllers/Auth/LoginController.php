@@ -23,7 +23,7 @@ class LoginController extends Controller
     public function redirectToProvider()
     {
         return Socialite::driver('facebook')
-            ->scopes(['manage_pages', 'publish_pages'])
+            ->scopes(['pages_manage_posts', 'pages_read_engagement'])
             ->redirect();
     }
 
