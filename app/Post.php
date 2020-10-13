@@ -22,45 +22,54 @@ class Post extends Model
     private $user;
     private $page;
 
-    public function setPage(Page $page){
+    public function setPage(Page $page)
+    {
         $this->page = $page;
         $this->page_id = $page->id;
         return $this;
     }
 
-    public function setUser(User $user){
+    public function setUser(User $user)
+    {
         $this->user = $user;
         $this->user_id = $user->id;
         return $this;
     }
 
-    public function setSocialMedia(AbstractSocialMedia $socialMedia){
+    public function setSocialMedia(AbstractSocialMedia $socialMedia)
+    {
         $this->socialMedia = $socialMedia;
         $this->social_media_id = $socialMedia->getId();
         return $this;
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function page(){
+    public function page()
+    {
         return $this->belongsTo(Page::class);
     }
 
-    public function socialMedia(){
+    public function socialMedia()
+    {
         return $this->belongsTo(SocialMedia::class);
     }
 
-    public static function getRules(){
+    public static function getRules()
+    {
         return [
             'title' => 'required|min:3',
             'body' => 'required',
             'publication' => [
-                function($attr, $date, $fail){
+                function($attr, $date, $fail)
+                {
                     $date = new DateTime($date);
                     $now = (new DateTime())->add(new \DateInterval('PT5M')); // now + 5min
-                    if($date < $now){
+                    if($date < $now)
+                    {
                         return $fail('Data de publicação precisa ter 5 minutos de antecedência.');
                     }
                 }
@@ -68,16 +77,19 @@ class Post extends Model
         ];
     }
 
-    public function isScheduled(){
+    public function isScheduled()
+    {
         return !empty($this->publication);
     }
 
     /**
      * Publish post in social media
      */
-    public function publish(Client $client = null){
+    public function publish(Client $client = null)
+    {
         $page = $this->page()->first();
-        $pageAccessToken = $page->tokens()->where('valid', true)->first()->token;
+        $pageAccessToken = $page->tokens()->where('valid', true)->first();
+        $pageAccessToken = $pageAccessToken->token;
         $body = \urlencode($this->body);
         $url = "https://graph.facebook.com/{$page->social_media_token}/feed?message={$body}&access_token={$pageAccessToken}";
         $client = $client ? : new Client();

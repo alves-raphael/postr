@@ -56,8 +56,7 @@ class User extends Authenticatable
         $userAccessToken = $this->getLastValidToken(TokenType::USER_ACCESS)->token;
         $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccessToken}";
         $client = $client ? : new \GuzzleHttp\Client();
-        $response = null;
-        
+
         $response = $client->request('GET', $url);
         $response = json_decode($response->getBody())->data;
         foreach($response as $item){
