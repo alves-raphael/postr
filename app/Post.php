@@ -7,6 +7,7 @@ use App\SocialMedia\AbstractSocialMedia;
 use GuzzleHttp\Client;
 use Illuminate\Support\Carbon;
 use DateTime;
+use App\SocialMedia\SocialMedia;
 
 class Post extends Model
 {

@@ -9,7 +9,6 @@ $('#send-now').change(function(){
     } else {
         enableMany(dateTimeInputs);
         publish.prop("disabled", false);
-        
     }
 });
 

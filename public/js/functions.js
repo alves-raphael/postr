@@ -9,15 +9,15 @@ function disable(input){
 }
 
 function disableMany(inputs){
-    for(input in inputs){
+    inputs.forEach((input) => {
         input.addClass('disabled');
         input.children("input").first().prop("disabled", true);
-    }
+    });    
 }
 
 function enableMany(inputs){
-    for(input in inputs){
+    inputs.forEach((input) => {
         input.removeClass('disabled');
         input.children(":disabled").prop("disabled", false);
-    }
+    });
 }
