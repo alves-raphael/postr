@@ -36,7 +36,7 @@ class Page extends Model
         return $this->user;
     }
 
-    public function alreadyExist() : boolean 
+    public function alreadyExist() : bool
     {
         return !empty($this->where('social_media_token', $this->social_media_token)->first());
     }
