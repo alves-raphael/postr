@@ -22,7 +22,11 @@ Route::group(['middleware' => ['guest']], function(){
         return view('home');
     })->name('home');
 
-    Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('login');
+    Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('facebook.login');
+
+    Route::get('login', function(){
+        return view('login');
+    })->name('login');
 
 });
 
