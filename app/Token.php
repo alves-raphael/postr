@@ -7,10 +7,13 @@ use App\SocialMedia\SocialMedia;
 
 class Token extends Model
 {
-    protected $fillable = ['token', 'user_id', 'social_media_id', 'valid', 'token_type_id', 'page_id'];
+    protected $fillable = ['token', 'user_id', 'social_media_id', 'expiration', 'token_type_id', 'page_id'];
 
     protected $guarded = ['page'];
 
+    /**
+     * @var App\SocialMedia
+     */
     private $socialMedia;
 
     /**
@@ -24,9 +27,27 @@ class Token extends Model
         return $this;
     }
 
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    public function setTokenType(int $type): self
+    {
+        $this->token_type_id = $type;
+        return $this;
+    }
+
     public function setPage(Page $page){
         $this->page = $page;
         $this->page_id = $page->id;
+        return $this;
+    }
+
+    public function setExpiration(?int $expiration): self
+    {
+        $this->expiration = $expiration;
         return $this;
     }
 
@@ -44,10 +65,5 @@ class Token extends Model
 
     public function page(){
         return $this->belongsTo(Page::class);
-    }
-
-    public function invalidate(){
-        $this->valid = false;
-        $this->save();
     }
 }

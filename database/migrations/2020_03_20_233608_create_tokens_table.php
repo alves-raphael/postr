@@ -15,12 +15,12 @@ class CreateTokensTable extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('token');
+            $table->string('token')->unique();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('token_type_id');
             $table->unsignedInteger('page_id')->nullable();
-            $table->boolean('valid')->default(true);
+            $table->timestamp('expiration')->nullable();
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');

@@ -47,33 +47,6 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    public function setupPages($client = null){
-        $userId = $this->getLastValidToken(TokenType::USER_ID)->token;
-        $userAccessToken = $this->getLastValidToken(TokenType::USER_ACCESS)->token;
-        $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccessToken}";
-        $client = $client ? : new \GuzzleHttp\Client();
-
-        $response = $client->request('GET', $url);
-        $response = json_decode($response->getBody())->data;
-        foreach($response as $item){
-            $page = Page::firstOrCreate([
-                'name' => $item->name,
-                'social_media_token' => $item->id
-            ]);
-            
-            $this->pages()->attach($page->id);
-
-            $token = (new Token([
-                'token' => $item->access_token,
-                'token_type_id' => TokenType::PAGE_ACCESS,
-                'user_id' => $this->id
-            ]))->setSocialMedia(new Facebook());
-            
-            $page->tokens()->save($token);
-        }
-        
-    }
-
     public static function createRandom(){
         $rand = rand(0,999);
         $user = \App\User::create([
