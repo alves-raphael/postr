@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
-    protected $fillable = ['social_media_token', 'name','user_id'];
+    protected $fillable = ['name','user_id'];
     private $user;
+    public $incrementing = false;
 
     public function tokens()
     {
@@ -36,12 +37,20 @@ class Page extends Model
         return $this->user;
     }
 
-    public function alreadyExist() : boolean 
+    public function alreadyExist() : bool
     {
-        return !empty($this->where('social_media_token', $this->social_media_token)->first());
+        return !empty($this->where('id', $this->id)->first());
     }
 
-    public function setup(){
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
 
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 }

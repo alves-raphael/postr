@@ -16,7 +16,7 @@ class CreatePageUserTable extends Migration
         Schema::create('page_user', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('page_id');
+            $table->unsignedBigInteger('page_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

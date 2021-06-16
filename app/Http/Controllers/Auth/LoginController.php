@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\SocialMedia\SocialMedia;
-use App\User;
 use Laravel\Socialite\AbstractUser;
-use Socialite;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\Token;
-use App\TokenType;
 use App\SocialMedia\Facebook;
+use App\User;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -23,8 +20,7 @@ class LoginController extends Controller
     public function redirectToProvider()
     {
         return Socialite::driver('facebook')
-            ->scopes(['pages_manage_posts', 'pages_read_engagement'])
-            ->redirect();
+            ->scopes(['pages_manage_posts', 'pages_read_engagement'])->redirect();
     }
 
     /**
@@ -35,14 +31,15 @@ class LoginController extends Controller
     public function handleFacebookCallback()
     {
         $user = Socialite::driver('facebook')->user();
-        return $this->login(new Facebook(), $user);
+        return $this->signUpAndLogin(new Facebook(), $user);
     }
 
-    private function login(SocialMedia $socialMedia, AbstractUser $user){
-        $user = $socialMedia->signUser($user);
+    private function signUpAndLogin(SocialMedia $socialMedia, AbstractUser $abstract)
+    {
+        $user = User::where('email', $abstract->email)->first();
+        $user = $user ?: $socialMedia->singup($abstract);
         Auth::login($user);
-        $route = $user->justCreated ? 'page.create' : 'post.list';
-        return redirect()->route($route);
+        return redirect()->route('post.list');
     }
 
     public function logout(){
