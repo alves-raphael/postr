@@ -16,10 +16,10 @@ class CreateTokensTable extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->increments('id');
             $table->string('token')->unique();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('token_type_id');
-            $table->unsignedInteger('page_id')->nullable();
+            $table->unsignedBigInteger('page_id')->nullable();
             $table->timestamp('expiration')->nullable();
             $table->timestamps();
 

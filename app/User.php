@@ -2,10 +2,9 @@
 
 namespace App;
 
+use App\SocialMedia\SocialMedia;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\SocialMedia\Facebook;
-use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -20,8 +19,6 @@ class User extends Authenticatable
         'name', 'email'
     ];
 
-    public $justCreated;
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -35,8 +32,19 @@ class User extends Authenticatable
         return $this->hasMany(Token::class);
     }
 
-    public function getLastValidToken($type) {
-        return $this->tokens()->where('valid', true)->where('token_type_id', $type)->orderBy('created_at')->first();
+    public function getAccessToken(SocialMedia $socialMedia): Token
+    {
+        return $this->tokens()->where('token_type_id', TokenType::USER_ACCESS)
+                ->where('expiration', '<=' , time())
+                ->orWhere('expiration', null)
+                ->where('social_media_id', $socialMedia->getId())
+                ->orderBy('created_at')->first();
+    }
+
+    public function getUserId(SocialMedia $socialMedia): Token
+    {
+        return $this->tokens()->where('token_type_id', TokenType::USER_ID)
+                ->where('social_media_id', $socialMedia->getId())->first();
     }
 
     public function pages(){
@@ -47,31 +55,21 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    public static function createRandom(){
-        $rand = rand(0,999);
-        $user = \App\User::create([
-            'name' => 'testuser' . $rand,
-            'email' => "test{$rand}@gmail.com",
-        ]);
-
-        $userAccessToken = new Token([
-            'token' => Str::random(40),
-            'token_type_id' => TokenType::USER_ACCESS,
-        ]);
-        $userAccessToken->setSocialMedia(new Facebook());
-        $user->tokens()->save($userAccessToken);
-
-        $userId = new Token([
-            'token' => Str::random(40),
-            'token_type_id' => TokenType::USER_ID,
-        ]);
-
-        $userId->setSocialMedia(new Facebook());
-        $user->tokens()->save($userId);
-        return $user;
+    public function getSocialMediaId(SocialMedia $socialMedia): Token
+    {
+        return $this->tokens()->where('token_type_id', TokenType::USER_ID)
+                        ->where('social_media_id', $socialMedia->getId())->first();
     }
 
-    public function getUserId(){
-        return $this->tokens()->where('token_type_id', TokenType::USER_ID)->first();
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
     }
 }

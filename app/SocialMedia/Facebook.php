@@ -7,66 +7,83 @@ use App\Page;
 use App\Token;
 use App\TokenType;
 use App\User;
+use Illuminate\Support\Collection;
 
 class Facebook extends SocialMedia
 {
 
     protected $id = 1;
 
-    public function assing(AbstractUser $user) : User
+    public function __construct()
     {
-        $accessToken = (new Token())
-            ->setToken($user->token)
-            ->setTokenType(TokenType::USER_ACCESS)
-            ->setExpiration($user->expiresIn)
-            ->setSocialMedia(new Facebook());
+        parent::__construct();
+        $this->http = new \GuzzleHttp\Client();
+    }
+
+    public function singup(AbstractUser $user) : User
+    {
+       $accessToken = $this->fetchLongLivedUserAccessToken($user->token);
 
         $userId = (new Token())
             ->setToken($user->id)
             ->setTokenType(TokenType::USER_ID)
-            ->setSocialMedia(new Facebook());
+            ->setSocialMedia($this);
 
-        $user = User::firstOrNew([
-                'name' => $user->name,
-                'email' => $user->email
-            ]);
-        $user->justCreated = !$user->exists;
+        $user = (new User())
+                ->setName($user->name)
+                ->setEmail($user->email);
+
         $user->save();
         $user->tokens()->save($accessToken);
-        if($user->justCreated){
-            $user->tokens()->save($userId);
-            // $this->setupPages($userId, $accessToken);
+        
+        $user->tokens()->save($userId);
+        $pages = $this->fetchPages($user);
+        foreach($pages as $pair){
+            list($token, $page) = $pair;
+            $page->save();
+            $user->pages()->attach($page->id);
+            $page->tokens()->save($token);
         }
         return $user;
     }
 
-    public function getPage(): array
+    public function fetchPages(User $user): Collection
     {
-        return [];
+        $userId = $user->getUserId($this)->token;
+        $userAccess = $user->getAccessToken($this)->token;
+        $url = "https://graph.facebook.com/v11.0/{$userId}/accounts?access_token={$userAccess}";
+
+        $response = $this->http->request('GET', $url);
+        $pages = json_decode($response->getBody())->data;
+        return collect($pages)->map(function($page){
+            $token = (new Token())
+                ->setSocialMedia($this)
+                ->setToken($page->access_token)
+                ->setTokenType(TokenType::PAGE_ACCESS);
+            $page = (new Page())
+                    ->setId($page->id)
+                    ->setName($page->name);
+            return [$token, $page];
+        });
     }
 
-    public function setupPages(Token $userId, Token $userAccess)
+    public function fetchLongLivedUserAccessToken(string $shortLived): Token
     {
-        $url = "https://graph.facebook.com/{$userId}/accounts?access_token={$userAccess}";
-        $client = new \GuzzleHttp\Client();
-
-        $response = $client->request('GET', $url);
-        $response = json_decode($response->getBody())->data;
-        foreach($response as $item){
-            $page = Page::firstOrCreate([
-                'name' => $item->name,
-                'social_media_token' => $item->id
-            ]);
-            
-            $this->pages()->attach($page->id);
-
-            $token = (new Token([
-                'token' => $item->access_token,
-                'token_type_id' => TokenType::PAGE_ACCESS,
-                'user_id' => $this->id
-            ]))->setSocialMedia(new Facebook());
-            
-            $page->tokens()->save($token);
-        }
+        $parameters = http_build_query([
+            'grant_type'=> 'fb_exchange_token',          
+            'client_id'=> getenv('FACEBOOK_CLIENT_ID'),
+            'client_secret'=> getenv('FACEBOOK_CLIENT_SECRET'),
+            'fb_exchange_token'=> $shortLived
+        ]);
+        $url = "https://graph.facebook.com/v11.0/oauth/access_token?{$parameters}";
+        $response = $this->http->request('GET', $url);
+        $token = json_decode($response->getBody());
+        $expiration = isset($token->expires_in) ? time() + (int) $token->expires_in : null;
+        return (new Token)
+                    ->setToken($token->access_token)
+                    ->setSocialMedia($this)
+                    ->setTokenType(TokenType::USER_ACCESS)
+                    ->setExpiration($expiration)
+                    ;
     }
 }

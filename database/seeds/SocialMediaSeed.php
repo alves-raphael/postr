@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SocialMediaSeed extends Seeder
@@ -17,13 +18,13 @@ class SocialMediaSeed extends Seeder
         );
 
         DB::table('token_types')->insert(
-            ['name' => 'User']
+            ['name' => 'user']
         );
         DB::table('token_types')->insert(
-            ['name' => 'Page']
+            ['name' => 'page']
         );
         DB::table('token_types')->insert(
-            ['name' => 'App']
+            ['name' => 'app']
         );
         DB::table('token_types')->insert(
             ['name' => 'user_id']
