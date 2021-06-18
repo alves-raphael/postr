@@ -55,12 +55,6 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    public function getSocialMediaId(SocialMedia $socialMedia): Token
-    {
-        return $this->tokens()->where('token_type_id', TokenType::USER_ID)
-                        ->where('social_media_id', $socialMedia->getId())->first();
-    }
-
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -72,4 +66,5 @@ class User extends Authenticatable
         $this->email = $email;
         return $this;
     }
+
 }
