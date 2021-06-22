@@ -16,7 +16,8 @@ use Illuminate\Support\Str;
 
 class FacebookTest extends TestCase
 {
-    public function testFetchPages() {
+    public function testFetchPages(): void
+    {
         $response = '{"data":[{"access_token":"60cc0234607fe","category":"Brand","category_list":[{"id":"1605186416478696","name":"Brand"}],"name":"Cute Kitten Page","id":"68738","tasks":["ANALYZE","ADVERTISE","MODERATE","CREATE_CONTENT","MANAGE"]}],"paging":{"cursors":{"before":"MTM1MzI2OTg2NDcyODg3OQZDZD","after":"MTM1MzI2OTg2NDcyODg3OQZDZD"}}}';
         $response = Mockery::mock(Response::class)
                     ->shouldReceive('getBody')
@@ -43,8 +44,7 @@ class FacebookTest extends TestCase
                         'getAccessToken' => $accessToken
                     ])->mock();
         $got = $facebook->fetchPages($mockUser);
-        $expected = collect([
-            [
+        $expected = collect([ [
             (new Token())
                 ->setSocialMedia($facebook)
                 ->setToken('60cc0234607fe')
@@ -52,8 +52,28 @@ class FacebookTest extends TestCase
             (new Page())
                 ->setId(68738)
                 ->setName('Cute Kitten Page')
-            ]
-        ]);
+            ] ]);
+        $this->assertEquals($got, $expected);
+   }
+
+   public function testFetchLongLivedToken(): void
+   {
+        $response = '{ "access_token":"60d267addefc4", "token_type": "bearer", "expires_in": 5183944 } ';
+        $response = Mockery::mock(Response::class)
+                    ->shouldReceive('getBody')
+                    ->andReturn($response)->mock();
+
+        $http = Mockery::mock(Client::class)
+                ->shouldReceive('request')
+                ->withSomeOfArgs('GET')
+                ->andReturn($response)->mock();
+        $facebook = new Facebook($http);
+        $got = $facebook->fetchLongLivedUserAccessToken(Str::random(10));
+        $expected = (new Token)
+                    ->setToken("60d267addefc4")
+                    ->setSocialMedia($facebook)
+                    ->setTokenType(TokenType::USER_ACCESS)
+                    ->setExpiration(time() + 5183944);
         $this->assertEquals($got, $expected);
    }
 
