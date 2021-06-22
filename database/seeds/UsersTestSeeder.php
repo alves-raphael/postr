@@ -4,6 +4,8 @@ use Illuminate\Database\Seeder;
 use App\SocialMedia\Facebook;
 use App\TokenType;
 use App\Token;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UsersTestSeeder extends Seeder
 {
@@ -14,24 +16,11 @@ class UsersTestSeeder extends Seeder
      */
     public function run()
     {
-        $user = \App\User::create([
-            'name' => 'Raphael',
-            'email' => 'raphael@gmail.com',
-        ]);
-
-        $userAccessToken = new Token([
-            'token' => 'asdaskljcnaqqn11980bn98b127xn12987x141739xnz12*&&)(*)',
-            'token_type_id' => TokenType::USER_ACCESS,
-        ]);
-        $userAccessToken->setSocialMedia(new Facebook());
-        $user->tokens()->save($userAccessToken);
-
-        $userId = new Token([
-            'token' => '123456789',
-            'token_type_id' => TokenType::USER_ID,
-        ]);
-
-        $userId->setSocialMedia(new Facebook());
-        $user->tokens()->save($userId);
+        DB::table('users')->insert(
+            [
+                'name' => 'Raphael',
+                'email' => 'raphael@example.com',
+            ]
+        );
     }
 }
