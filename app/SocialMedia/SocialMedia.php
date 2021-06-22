@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use Laravel\Socialite\AbstractUser;
 
-class SocialMedia extends Model
+abstract class SocialMedia extends Model
 {
     protected $id;
 
@@ -21,12 +21,11 @@ class SocialMedia extends Model
     }
 
     /**
-     * Create and return a new user based on given data or retrieve
-     * from database if already exists
-     * @param any $abstractUser
+     * Create and return a new user based on given data
+     * @param AbstractUser $abstractUser
      * @return User
      */
-    // abstract function signUser($abstractUser) : User;
+    abstract function signup(AbstractUser $abstractUser) : User;
 
     // /**
     //  * Logic behind social media specific integration to publish a post

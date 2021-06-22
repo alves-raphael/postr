@@ -7,6 +7,7 @@ use App\Page;
 use App\Token;
 use App\TokenType;
 use App\User;
+use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 
 class Facebook extends SocialMedia
@@ -14,13 +15,13 @@ class Facebook extends SocialMedia
 
     protected $id = 1;
 
-    public function __construct()
+    public function __construct(Client $http)
     {
         parent::__construct();
-        $this->http = new \GuzzleHttp\Client();
+        $this->http = $http;
     }
 
-    public function singup(AbstractUser $user) : User
+    public function signup(AbstractUser $user) : User
     {
        $accessToken = $this->fetchLongLivedUserAccessToken($user->token);
 
@@ -83,7 +84,6 @@ class Facebook extends SocialMedia
                     ->setToken($token->access_token)
                     ->setSocialMedia($this)
                     ->setTokenType(TokenType::USER_ACCESS)
-                    ->setExpiration($expiration)
-                    ;
+                    ->setExpiration($expiration);
     }
 }
