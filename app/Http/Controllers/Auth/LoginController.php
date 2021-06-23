@@ -7,7 +7,6 @@ use App\SocialMedia\SocialMedia;
 use Laravel\Socialite\AbstractUser;
 use Illuminate\Support\Facades\Auth;
 use App\SocialMedia\Facebook;
-use App\SocialMedia\ISocialMedia;
 use App\User;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -32,6 +31,7 @@ class LoginController extends Controller
     public function handleFacebookCallback(Facebook $facebook)
     {
         $user = Socialite::driver('facebook')->user();
+        dd($user);
         return $this->signUpAndLogin($facebook, $user);
     }
 
