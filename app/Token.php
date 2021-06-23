@@ -66,4 +66,10 @@ class Token extends Model
     public function page(){
         return $this->belongsTo(Page::class);
     }
+
+    public function setSocialMediaId(int $id): self
+    {
+        $this->social_media_id = $id;
+        return $this;
+    }
 }

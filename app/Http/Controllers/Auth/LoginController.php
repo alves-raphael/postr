@@ -7,7 +7,6 @@ use App\SocialMedia\SocialMedia;
 use Laravel\Socialite\AbstractUser;
 use Illuminate\Support\Facades\Auth;
 use App\SocialMedia\Facebook;
-use App\SocialMedia\ISocialMedia;
 use App\User;
 use Laravel\Socialite\Facades\Socialite;
 
