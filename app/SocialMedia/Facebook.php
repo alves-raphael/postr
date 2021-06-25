@@ -39,6 +39,7 @@ class Facebook extends SocialMedia
         
         $user->tokens()->save($userId);
         $pages = $this->fetchPages($user);
+
         foreach($pages as $pair){
             list($token, $page) = $pair;
             $page->save();

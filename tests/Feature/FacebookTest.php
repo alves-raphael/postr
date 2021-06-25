@@ -9,6 +9,7 @@ use Mockery;
 use App\SocialMedia\Facebook;
 use App\Token;
 use App\TokenType;
+use App\User;
 use Laravel\Socialite\Two\User as AbstractUser;
 
 class FacebookTest extends TestCase
@@ -39,7 +40,16 @@ class FacebookTest extends TestCase
             (new Page())
                   ->setId(68738)
                   ->setName('Cute Kitten Page')
-         ] ]);
+         ],[
+            (new Token())
+                  ->setSocialMediaId(1)
+                  ->setToken('60d3d68169e70')
+                  ->setTokenType(TokenType::PAGE_ACCESS),
+            (new Page())
+                  ->setId(6335)
+                  ->setName('Cute Kitten Page 2')
+         ]
+      ]);
 
       $facebook = Mockery::mock(Facebook::class)
                            ->makePartial()
@@ -48,7 +58,7 @@ class FacebookTest extends TestCase
                               'fetchPages' => $pages
                            ])->mock();
 
-      $user = (new AbstractUser)
+      $user = (new AbstractUser())
                ->map([
                   'id' => 7127,
                   'name' => "Raphael Alves",
@@ -56,11 +66,14 @@ class FacebookTest extends TestCase
                   'token' => '60d278d59af5a'
                ]);
 
-      $got = $facebook->signup($user);
-      $gotToken = $got->tokens()->where('token_type_id', TokenType::USER_ACCESS)->first();
-      $this->assertEquals($got->email, $user->email);
-      $this->assertEquals($got->name, $user->name);
-      $this->assertEquals($gotToken->token, $accessToken->token);
+      $gottenUser = $facebook->signup($user);
+
+      $gottenToken = $gottenUser->tokens()->where('token_type_id', TokenType::USER_ACCESS)->first();
+      $this->assertEquals($gottenUser->email, $user->email);
+      $this->assertEquals($gottenUser->name, $user->name);
+      $this->assertEquals($gottenToken->token, $accessToken->token);
+      $this->assertNotEmpty(Page::find(68738));
+      $this->assertNotEmpty(Page::find(6335));
    }
 
    public function tearDown(): void
