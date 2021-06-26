@@ -12,6 +12,7 @@ use DateTime;
 class Post extends Model
 {
     protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id','page_id'];
+    public $incrementing = false;
 
     protected $casts = [
         'published' => 'boolean'
@@ -81,26 +82,6 @@ class Post extends Model
     public function isScheduled(): bool
     {
         return !empty($this->publication);
-    }
-
-    /**
-     * Publish post in social media
-     */
-    public function publish()
-    {
-        $page = $this->page()->first();
-        $pageAccessToken = $page->tokens()->where('valid', true)->first();
-        $pageAccessToken = $pageAccessToken->token;
-        $body = \urlencode($this->body);
-        $url = "https://graph.facebook.com/{$page->social_media_token}/feed?message={$body}&access_token={$pageAccessToken}";
-        $client = new Client();
-
-        $response = $client->request('POST', $url);
-        $response = json_decode($response->getBody());
-        $this->social_media_token = $response->id;
-        $this->published = true;
-        $this->publication = new DateTime();
-        $this->save();
     }
 
     public function isEditable() : bool 
