@@ -47,6 +47,15 @@ class User extends Authenticatable
                 ->where('social_media_id', $socialMedia->getId())->first();
     }
 
+    public function getPageAccessToken(): Token
+    {
+        return $this->tokens()->where('token_type_id', TokenType::PAGE_ACCESS)
+                ->where('expiration', '<=' , time())
+                ->orWhere('expiration', null)
+                ->where('social_media_id', 1)
+                ->orderBy('created_at')->first();
+    }
+
     public function pages(){
         return $this->belongsToMany(Page::class);
     }

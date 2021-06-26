@@ -4,9 +4,11 @@ namespace App\SocialMedia;
 
 use Laravel\Socialite\AbstractUser;
 use App\Page;
+use App\Post;
 use App\Token;
 use App\TokenType;
 use App\User;
+use DateTime;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 
@@ -14,12 +16,7 @@ class Facebook extends SocialMedia
 {
 
     protected $id = 1;
-
-    public function __construct(Client $http)
-    {
-        parent::__construct();
-        $this->http = $http;
-    }
+    protected $http;
 
     public function signup(AbstractUser $user) : User
     {
@@ -57,11 +54,14 @@ class Facebook extends SocialMedia
 
         $response = $this->http->request('GET', $url);
         $pages = json_decode($response->getBody())->data;
-        return collect($pages)->map(function($page){
+        return collect($pages)->map(function($page) use($user)
+        {
             $token = (new Token())
                 ->setSocialMedia($this)
                 ->setToken($page->access_token)
-                ->setTokenType(TokenType::PAGE_ACCESS);
+                ->setTokenType(TokenType::PAGE_ACCESS)
+                ->setUser($user)
+                ;
             $page = (new Page())
                     ->setId($page->id)
                     ->setName($page->name);

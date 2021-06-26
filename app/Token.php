@@ -72,4 +72,11 @@ class Token extends Model
         $this->social_media_id = $id;
         return $this;
     }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+        $this->user_id = $user->id;
+        return $this;
+    }
 }

@@ -74,6 +74,8 @@ class FacebookTest extends TestCase
       $this->assertEquals($gottenToken->token, $accessToken->token);
       $this->assertNotEmpty(Page::find(68738));
       $this->assertNotEmpty(Page::find(6335));
+      $gottenPageToken = Token::where('token', '60cc0234607fe')->first();
+      $this->assertNotEmpty($gottenPageToken);
    }
 
    public function tearDown(): void

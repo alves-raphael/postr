@@ -39,16 +39,19 @@ class FacebookTest extends TestCase
                     ->setTokenType(TokenType::USER_ID);
 
         $mockUser = Mockery::mock(User::class)
+                    ->makePartial()
                     ->shouldReceive([
                         'getUserId' => $userId,
                         'getAccessToken' => $accessToken
-                    ])->mock();
+                    ])->andSet('id', 2)->mock();
+
         $got = $facebook->fetchPages($mockUser);
         $expected = collect([ [
             (new Token())
                 ->setSocialMedia($facebook)
                 ->setToken('60cc0234607fe')
-                ->setTokenType(TokenType::PAGE_ACCESS),
+                ->setTokenType(TokenType::PAGE_ACCESS)
+                ->setUser($mockUser),
             (new Page())
                 ->setId(68738)
                 ->setName('Cute Kitten Page')
