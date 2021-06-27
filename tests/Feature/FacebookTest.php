@@ -25,6 +25,7 @@ class FacebookTest extends TestCase
 
    public function testSignUp()
    {
+      $user = new User(['id' => 1]);
 
       $accessToken = (new Token())
                     ->setToken("60d267addefc4")
@@ -36,7 +37,8 @@ class FacebookTest extends TestCase
             (new Token())
                   ->setSocialMediaId(1)
                   ->setToken('60cc0234607fe')
-                  ->setTokenType(TokenType::PAGE_ACCESS),
+                  ->setTokenType(TokenType::PAGE_ACCESS)
+                  ->setUser($user),
             (new Page())
                   ->setId(68738)
                   ->setName('Cute Kitten Page')
@@ -44,7 +46,8 @@ class FacebookTest extends TestCase
             (new Token())
                   ->setSocialMediaId(1)
                   ->setToken('60d3d68169e70')
-                  ->setTokenType(TokenType::PAGE_ACCESS),
+                  ->setTokenType(TokenType::PAGE_ACCESS)
+                  ->setUser($user),
             (new Page())
                   ->setId(6335)
                   ->setName('Cute Kitten Page 2')
@@ -74,7 +77,7 @@ class FacebookTest extends TestCase
       $this->assertEquals($gottenToken->token, $accessToken->token);
       $this->assertNotEmpty(Page::find(68738));
       $this->assertNotEmpty(Page::find(6335));
-      $gottenPageToken = Token::where('token', '60cc0234607fe')->first();
+      $gottenPageToken = Token::where('token', '60d3d68169e70')->first();
       $this->assertNotEmpty($gottenPageToken);
    }
 

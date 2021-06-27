@@ -9,7 +9,7 @@ class Token extends Model
 {
     protected $fillable = ['token', 'user_id', 'social_media_id', 'expiration', 'token_type_id', 'page_id'];
 
-    protected $guarded = ['page'];
+    protected $guarded = ['page', 'user'];
 
     /**
      * @var App\SocialMedia
@@ -20,6 +20,11 @@ class Token extends Model
      * @var App\Page
      */
     private $page;
+
+    /**
+     * @var App\User
+     */
+    private $user;
 
     public function setSocialMedia(SocialMedia $socialMedia){
         $this->socialMedia = $socialMedia;
