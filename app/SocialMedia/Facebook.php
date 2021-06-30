@@ -64,7 +64,7 @@ class Facebook extends AbstractSocialMedia
                 ->setUser($user)
                 ;
             $page = (new Page())
-                    ->setId($page->id)
+                    ->setId((int) $page->id)
                     ->setName($page->name);
             return [$token, $page];
         });
