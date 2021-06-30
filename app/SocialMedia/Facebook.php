@@ -12,6 +12,7 @@ use DateTime;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Facebook extends AbstractSocialMedia
 {
@@ -55,6 +56,10 @@ class Facebook extends AbstractSocialMedia
 
         $response = $this->http->request('GET', $url);
         $pages = json_decode($response->getBody())->data;
+        Log::channel('api')->info('fetchPages', [
+            'url' => $url,
+            'response' => $pages
+        ]);
         return collect($pages)->map(function($page) use($user)
         {
             $token = (new Token())
