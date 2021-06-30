@@ -56,7 +56,6 @@ class Facebook extends AbstractSocialMedia
 
         $response = $this->http->request('GET', $url);
         $pages = json_decode($response->getBody())->data;
-
         return collect($pages)->map(function($page) use($user)
         {
             $token = (new Token())
