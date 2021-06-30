@@ -47,18 +47,23 @@ class User extends Authenticatable
                 ->where('social_media_id', $socialMedia->getId())->first();
     }
 
+    public function getPageAccessToken(): Token
+    {
+        $token = $this->tokens()->where('token_type_id', TokenType::PAGE_ACCESS)
+                ->where('expiration', '<=' , time())
+                ->orWhere('expiration', null)
+                ->where('social_media_id', 1)
+                ->orderBy('created_at')->first();
+        dd($token->token_type_id);
+        return $token;
+    }
+
     public function pages(){
         return $this->belongsToMany(Page::class);
     }
 
     public function posts(){
         return $this->hasMany(Post::class);
-    }
-
-    public function getSocialMediaId(SocialMedia $socialMedia): Token
-    {
-        return $this->tokens()->where('token_type_id', TokenType::USER_ID)
-                        ->where('social_media_id', $socialMedia->getId())->first();
     }
 
     public function setName(string $name): self
@@ -72,4 +77,5 @@ class User extends Authenticatable
         $this->email = $email;
         return $this;
     }
+
 }

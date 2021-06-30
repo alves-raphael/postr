@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
-use App\User;
 use App\SocialMedia\SocialMedia;
+use App\SocialMedia\AbstractSocialMedia;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -15,16 +15,16 @@ class PostController extends Controller
         return view('post.create', ['socialMedias' => SocialMedia::all(), 'pages' => $pages]);
     }
 
-    public function create(Request $request){
+    public function create(Request $request, AbstractSocialMedia $socialMedia){
         $request->validate(Post::getRules());
         $post = new Post($request->all());
         Auth::user()->posts()->save($post);
         $extra = '';
         if(!$post->isScheduled()){
-            $post->publish();
-            $extra = 'e publicada';
+            $socialMedia->publish($post);
+            $extra = 'e publicada ';
         }
-        return redirect()->route('post.list')->with('success', "Publicação criada {$extra} com successo");
+        return redirect()->route('post.list')->with('success', "Publicação criada {$extra}com successo");
     }
 
     public function list(){
@@ -36,21 +36,19 @@ class PostController extends Controller
         return view('post.list', ['posts' => $posts]);
     }
 
-    public function publish(Request $request){
-        $posts = $request->get('posts');
+    public function publish(Request $request, AbstractSocialMedia $socialMedia){
         $response = ['success' => false, 'messages' => [], 'result' => []];
+
+        $posts = $request->get('posts');
         if(empty($posts) || !is_array($posts)){
-            $response['messages'][] = "Parameter 'posts' are required and need to be a list of posts' id";
+            $response['messages'][] = "Parameter 'posts' is required and need to be a list of posts' id";
             return response()->json($response)->setStatusCode(400);
         }
 
         $posts = Post::whereIn('id', $posts)->get();
-        $published = [];
-        foreach($posts as $post){
-            if($post->published){
-                $published[] = $post->id;
-            }
-        }
+        $published = $posts->filter(function($post){
+            return $post->published;
+        });
 
         // Check if the same posts have already been published
         if(!empty($published)){
@@ -60,10 +58,11 @@ class PostController extends Controller
         }
 
         foreach($posts as $post){
-            $post->publish();
+            $socialMedia->publish($post);
         }
 
         $response['messages'][] = 'Posts have been published with success!';
+        $response['success'] = true;
         return response()->json($response)->setStatusCode(200);
     }
 

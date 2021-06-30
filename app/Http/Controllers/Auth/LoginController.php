@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\SocialMedia\AbstractSocialMedia;
 use App\SocialMedia\SocialMedia;
 use Laravel\Socialite\AbstractUser;
 use Illuminate\Support\Facades\Auth;
@@ -28,16 +29,16 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleFacebookCallback()
+    public function handleFacebookCallback(Facebook $facebook)
     {
         $user = Socialite::driver('facebook')->user();
-        return $this->signUpAndLogin(new Facebook(), $user);
+        return $this->signUpAndLogin($facebook, $user);
     }
 
-    private function signUpAndLogin(SocialMedia $socialMedia, AbstractUser $abstract)
+    private function signUpAndLogin(AbstractSocialMedia $socialMedia, AbstractUser $abstract)
     {
         $user = User::where('email', $abstract->email)->first();
-        $user = $user ?: $socialMedia->singup($abstract);
+        $user = $user ?: $socialMedia->signup($abstract);
         Auth::login($user);
         return redirect()->route('post.list');
     }

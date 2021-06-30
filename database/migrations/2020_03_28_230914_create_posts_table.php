@@ -14,7 +14,7 @@ class CreatePostsTable extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id')->primary();
             $table->string('title');
             $table->text('body');
             $table->dateTime('publication')->useCurrent();
@@ -23,7 +23,6 @@ class CreatePostsTable extends Migration
             $table->unsignedInteger('social_media_id');
             $table->unsignedBigInteger('page_id')->nullable();
             $table->unsignedInteger('user_id');
-            $table->string('social_media_token')->nullable();
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');

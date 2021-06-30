@@ -3,25 +3,25 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\SocialMedia\AbstractSocialMedia;
 use App\SocialMedia\SocialMedia;
 use Illuminate\Support\Carbon;
-use GuzzleHttp\Client;
 use DateTime;
 
 class Post extends Model
 {
     protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id','page_id'];
+    public $incrementing = false;
 
     protected $casts = [
         'published' => 'boolean'
     ];
 
+    protected $guarded = ['page'];
+
     protected $dates = ['publication', 'created_at','updated_at'];
 
     private $socialMedia;
     private $user;
-    private $page;
 
     public function setPage(Page $page)
     {
@@ -83,29 +83,33 @@ class Post extends Model
         return !empty($this->publication);
     }
 
-    /**
-     * Publish post in social media
-     */
-    public function publish()
-    {
-        $page = $this->page()->first();
-        $pageAccessToken = $page->tokens()->where('valid', true)->first();
-        $pageAccessToken = $pageAccessToken->token;
-        $body = \urlencode($this->body);
-        $url = "https://graph.facebook.com/{$page->social_media_token}/feed?message={$body}&access_token={$pageAccessToken}";
-        $client = new Client();
-
-        $response = $client->request('POST', $url);
-        $response = json_decode($response->getBody());
-        $this->social_media_token = $response->id;
-        $this->published = true;
-        $this->publication = new DateTime();
-        $this->save();
-    }
-
     public function isEditable() : bool 
     {
         $fiveMinFromNow = new Carbon((new DateTime())->add(new \DateInterval('PT5M')));
         return $fiveMinFromNow->lessThanOrEqualTo($this->publication);
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+        return $this;
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function($model){
+            if(empty($model->id)){
+                $model->id = uniqid();
+            }
+        });
     }
 }

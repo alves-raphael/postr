@@ -4,23 +4,22 @@ namespace App\SocialMedia;
 
 use Laravel\Socialite\AbstractUser;
 use App\Page;
+use App\Post;
 use App\Token;
 use App\TokenType;
 use App\User;
+use DateTime;
+use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
-class Facebook extends SocialMedia
+class Facebook extends AbstractSocialMedia
 {
 
     protected $id = 1;
+    protected $http;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->http = new \GuzzleHttp\Client();
-    }
-
-    public function singup(AbstractUser $user) : User
+    public function signup(AbstractUser $user) : User
     {
        $accessToken = $this->fetchLongLivedUserAccessToken($user->token);
 
@@ -38,6 +37,7 @@ class Facebook extends SocialMedia
         
         $user->tokens()->save($userId);
         $pages = $this->fetchPages($user);
+
         foreach($pages as $pair){
             list($token, $page) = $pair;
             $page->save();
@@ -55,11 +55,14 @@ class Facebook extends SocialMedia
 
         $response = $this->http->request('GET', $url);
         $pages = json_decode($response->getBody())->data;
-        return collect($pages)->map(function($page){
+        return collect($pages)->map(function($page) use($user)
+        {
             $token = (new Token())
                 ->setSocialMedia($this)
                 ->setToken($page->access_token)
-                ->setTokenType(TokenType::PAGE_ACCESS);
+                ->setTokenType(TokenType::PAGE_ACCESS)
+                ->setUser($user)
+                ;
             $page = (new Page())
                     ->setId($page->id)
                     ->setName($page->name);
@@ -83,7 +86,22 @@ class Facebook extends SocialMedia
                     ->setToken($token->access_token)
                     ->setSocialMedia($this)
                     ->setTokenType(TokenType::USER_ACCESS)
-                    ->setExpiration($expiration)
-                    ;
+                    ->setExpiration($expiration);
+    }
+
+    public function publish(Post $post) : void
+    {
+        $user = Auth::user();
+        $pageAccess = (new Token())->getPageAccess($post->page, $user);
+        $body = \urlencode($post->body);
+        $url = "https://graph.facebook.com/{$post->page_id}/feed?message={$body}&access_token={$pageAccess->token}";
+        $client = new Client();
+
+        $response = $client->request('POST', $url);
+        $response = json_decode($response->getBody());
+        $post->id = $response->id;
+        $post->published = true;
+        $post->publication = new DateTime();
+        $post->save();
     }
 }

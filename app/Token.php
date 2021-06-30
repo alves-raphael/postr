@@ -9,7 +9,7 @@ class Token extends Model
 {
     protected $fillable = ['token', 'user_id', 'social_media_id', 'expiration', 'token_type_id', 'page_id'];
 
-    protected $guarded = ['page'];
+    protected $guarded = ['page', 'user'];
 
     /**
      * @var App\SocialMedia
@@ -20,6 +20,11 @@ class Token extends Model
      * @var App\Page
      */
     private $page;
+
+    /**
+     * @var App\User
+     */
+    private $user;
 
     public function setSocialMedia(SocialMedia $socialMedia){
         $this->socialMedia = $socialMedia;
@@ -65,5 +70,29 @@ class Token extends Model
 
     public function page(){
         return $this->belongsTo(Page::class);
+    }
+
+    public function setSocialMediaId(int $id): self
+    {
+        $this->social_media_id = $id;
+        return $this;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+        $this->user_id = $user->id;
+        return $this;
+    }
+
+    public function getPageAccess(Page $page, User $user): Token
+    {
+        return $this->where('token_type_id', TokenType::PAGE_ACCESS)
+                ->where('expiration', '<=' , time())
+                ->orWhere('expiration', null)
+                ->where('social_media_id', 1)
+                ->where('page_id', $page->id)
+                ->where('user_id', $user->id)
+                ->orderBy('created_at')->first();
     }
 }
