@@ -64,12 +64,9 @@ class Facebook extends AbstractSocialMedia
                 ->setTokenType(TokenType::PAGE_ACCESS)
                 ->setUser($user)
                 ;
-            Log::channel('api')->info('fetchPages', [
-                'page_id' => $page->id,
-                'page_id_int' => (int) $page->id,
-            ]);
+
             $page = (new Page())
-                    ->setId((int) $page->id)
+                    ->setId($page->id)
                     ->setName($page->name);
             return [$token, $page];
         });

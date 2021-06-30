@@ -42,7 +42,7 @@ class Page extends Model
         return !empty($this->where('id', $this->id)->first());
     }
 
-    public function setId(int $id): self
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
