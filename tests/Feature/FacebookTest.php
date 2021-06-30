@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Page;
+use App\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Mockery;
@@ -10,7 +11,10 @@ use App\SocialMedia\Facebook;
 use App\Token;
 use App\TokenType;
 use App\User;
+use Facade\FlareClient\Http\Response;
+use GuzzleHttp\Client;
 use Laravel\Socialite\Two\User as AbstractUser;
+use Illuminate\Support\Str;
 
 class FacebookTest extends TestCase
 {
@@ -79,6 +83,31 @@ class FacebookTest extends TestCase
       $this->assertNotEmpty(Page::find(6335));
       $gottenPageToken = Token::where('token', '60d3d68169e70')->first();
       $this->assertNotEmpty($gottenPageToken);
+   }
+
+   public function testPublish()
+   {
+      $id = rand(10000, 100000);
+      $response = '{"id":"'.$id.'"}';
+      $response = Mockery::mock(Response::class)
+                  ->shouldReceive('getBody')
+                  ->andReturn($response)->mock();
+      $http = Mockery::mock(Client::class)
+               ->shouldReceive('request')
+               ->withSomeOfArgs('GET')
+               ->andReturn($response)->mock();
+      $facebook = Mockery::mock(Facebook::class)
+                     ->makePartial()
+                     ->shouldReceive([
+                        'getPageAccessToken' => (new Token)->setToken(Str::random(10)),
+                     ])->andSet('http', $http)->mock();
+      $post = (new Post())
+               ->setTitle('Simple Test')
+               ->setBody('Tempor amet voluptate elit enim reprehenderit velit voluptate.')
+               ->setSocialMedia($facebook)
+               ->setUser(User::find(1));     
+      $facebook->publish($post);
+      
    }
 
    public function tearDown(): void

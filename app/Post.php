@@ -3,10 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\SocialMedia\AbstractSocialMedia;
 use App\SocialMedia\SocialMedia;
 use Illuminate\Support\Carbon;
-use GuzzleHttp\Client;
 use DateTime;
 
 class Post extends Model
@@ -18,11 +16,12 @@ class Post extends Model
         'published' => 'boolean'
     ];
 
+    protected $guarded = ['page'];
+
     protected $dates = ['publication', 'created_at','updated_at'];
 
     private $socialMedia;
     private $user;
-    private $page;
 
     public function setPage(Page $page)
     {
@@ -88,5 +87,29 @@ class Post extends Model
     {
         $fiveMinFromNow = new Carbon((new DateTime())->add(new \DateInterval('PT5M')));
         return $fiveMinFromNow->lessThanOrEqualTo($this->publication);
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+        return $this;
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function($model){
+            if(empty($model->id)){
+                $model->id = uniqid();
+            }
+        });
     }
 }

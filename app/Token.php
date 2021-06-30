@@ -84,4 +84,15 @@ class Token extends Model
         $this->user_id = $user->id;
         return $this;
     }
+
+    public function getPageAccess(Page $page, User $user): Token
+    {
+        return $this->where('token_type_id', TokenType::PAGE_ACCESS)
+                ->where('expiration', '<=' , time())
+                ->orWhere('expiration', null)
+                ->where('social_media_id', 1)
+                ->where('page_id', $page->id)
+                ->where('user_id', $user->id)
+                ->orderBy('created_at')->first();
+    }
 }

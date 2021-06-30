@@ -11,8 +11,9 @@ use App\User;
 use DateTime;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
-class Facebook extends SocialMedia
+class Facebook extends AbstractSocialMedia
 {
 
     protected $id = 1;
@@ -86,5 +87,21 @@ class Facebook extends SocialMedia
                     ->setSocialMedia($this)
                     ->setTokenType(TokenType::USER_ACCESS)
                     ->setExpiration($expiration);
+    }
+
+    public function publish(Post $post) : void
+    {
+        $user = Auth::user();
+        $pageAccess = (new Token())->getPageAccess($post->page, $user);
+        $body = \urlencode($post->body);
+        $url = "https://graph.facebook.com/{$post->page_id}/feed?message={$body}&access_token={$pageAccess->token}";
+        $client = new Client();
+
+        $response = $client->request('POST', $url);
+        $response = json_decode($response->getBody());
+        $post->id = $response->id;
+        $post->published = true;
+        $post->publication = new DateTime();
+        $post->save();
     }
 }

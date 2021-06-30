@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\SocialMedia\SocialMedia;
+use App\SocialMedia\AbstractSocialMedia;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -14,16 +15,16 @@ class PostController extends Controller
         return view('post.create', ['socialMedias' => SocialMedia::all(), 'pages' => $pages]);
     }
 
-    public function create(Request $request, SocialMedia $socialMedia){
+    public function create(Request $request, AbstractSocialMedia $socialMedia){
         $request->validate(Post::getRules());
         $post = new Post($request->all());
         Auth::user()->posts()->save($post);
         $extra = '';
         if(!$post->isScheduled()){
             $socialMedia->publish($post);
-            $extra = 'e publicada';
+            $extra = 'e publicada ';
         }
-        return redirect()->route('post.list')->with('success', "Publicação criada {$extra} com successo");
+        return redirect()->route('post.list')->with('success', "Publicação criada {$extra}com successo");
     }
 
     public function list(){
@@ -35,7 +36,7 @@ class PostController extends Controller
         return view('post.list', ['posts' => $posts]);
     }
 
-    public function publish(Request $request, SocialMedia $socialMedia){
+    public function publish(Request $request, AbstractSocialMedia $socialMedia){
         $response = ['success' => false, 'messages' => [], 'result' => []];
 
         $posts = $request->get('posts');
