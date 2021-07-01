@@ -37,9 +37,9 @@ class Page extends Model
         return $this->user;
     }
 
-    public function alreadyExist() : bool
+    public function alreadyExists() : bool
     {
-        return !empty($this->where('id', $this->id)->first());
+        return !empty($this->find($this->id));
     }
 
     public function setId($id): self
