@@ -41,7 +41,9 @@ class Facebook extends AbstractSocialMedia
 
         foreach($pages as $pair){
             list($token, $page) = $pair;
-            $page->save();
+            if(!$page->alreadyExist()){
+                $page->save();
+            }
             $user->pages()->attach($page->id);
             $page->tokens()->save($token);
         }
