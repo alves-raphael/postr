@@ -11,6 +11,7 @@ use App\SocialMedia\Facebook;
 use App\Token;
 use App\TokenType;
 use App\User;
+use DateTime;
 use Facade\FlareClient\Http\Response;
 use GuzzleHttp\Client;
 use Laravel\Socialite\Two\User as AbstractUser;
@@ -31,10 +32,11 @@ class FacebookTest extends TestCase
    {
       $user = new User(['id' => 1]);
 
+      $expiration = (new DateTime())->setTimestamp(time() + 5183944);
       $accessToken = (new Token())
                     ->setToken("60d267addefc4")
                     ->setTokenType(TokenType::USER_ACCESS)
-                    ->setExpiration(time() + 5183944)
+                    ->setExpiration($expiration)
                     ->setSocialMediaId(1);
 
       $pages = collect([ [
@@ -73,11 +75,20 @@ class FacebookTest extends TestCase
                   'token' => '60d278d59af5a'
                ]);
 
-      $gottenUser = $facebook->signup($user);
+      $firstGottenUser = $facebook->signup($user);
 
-      $gottenToken = $gottenUser->tokens()->where('token_type_id', TokenType::USER_ACCESS)->first();
-      $this->assertEquals($gottenUser->email, $user->email);
-      $this->assertEquals($gottenUser->name, $user->name);
+      // $secondUser = (new AbstractUser())
+      //    ->map([
+      //       'id' => 6546,
+      //       'name' => "Jonisclayson",
+      //       'email' => "jonisclayson.pinto@gmail.com",
+      //       'token' => '60dcf9989938f'
+      //    ]);
+      // $secondGottenUser = $facebook->signup($secondUser);
+
+      $gottenToken = $firstGottenUser->tokens()->where('token_type_id', TokenType::USER_ACCESS)->first();
+      $this->assertEquals($firstGottenUser->email, $user->email);
+      $this->assertEquals($firstGottenUser->name, $user->name);
       $this->assertEquals($gottenToken->token, $accessToken->token);
       $this->assertNotEmpty(Page::find(68738));
       $this->assertNotEmpty(Page::find(6335));
@@ -85,30 +96,30 @@ class FacebookTest extends TestCase
       $this->assertNotEmpty($gottenPageToken);
    }
 
-   public function testPublish()
-   {
-      $id = rand(10000, 100000);
-      $response = '{"id":"'.$id.'"}';
-      $response = Mockery::mock(Response::class)
-                  ->shouldReceive('getBody')
-                  ->andReturn($response)->mock();
-      $http = Mockery::mock(Client::class)
-               ->shouldReceive('request')
-               ->withSomeOfArgs('GET')
-               ->andReturn($response)->mock();
-      $facebook = Mockery::mock(Facebook::class)
-                     ->makePartial()
-                     ->shouldReceive([
-                        'getPageAccessToken' => (new Token)->setToken(Str::random(10)),
-                     ])->andSet('http', $http)->mock();
-      $post = (new Post())
-               ->setTitle('Simple Test')
-               ->setBody('Tempor amet voluptate elit enim reprehenderit velit voluptate.')
-               ->setSocialMedia($facebook)
-               ->setUser(User::find(1));     
-      $facebook->publish($post);
+   // public function testPublish()
+   // {
+   //    $id = rand(10000, 100000);
+   //    $response = '{"id":"'.$id.'"}';
+   //    $response = Mockery::mock(Response::class)
+   //                ->shouldReceive('getBody')
+   //                ->andReturn($response)->mock();
+   //    $http = Mockery::mock(Client::class)
+   //             ->shouldReceive('request')
+   //             ->withSomeOfArgs('GET')
+   //             ->andReturn($response)->mock();
+   //    $facebook = Mockery::mock(Facebook::class)
+   //                   ->makePartial()
+   //                   ->shouldReceive([
+   //                      'getPageAccessToken' => (new Token)->setToken(Str::random(10)),
+   //                   ])->andSet('http', $http)->mock();
+   //    $post = (new Post())
+   //             ->setTitle('Simple Test')
+   //             ->setBody('Tempor amet voluptate elit enim reprehenderit velit voluptate.')
+   //             ->setSocialMedia($facebook)
+   //             ->setUser(User::find(1));     
+   //    $facebook->publish($post);
       
-   }
+   // }
 
    public function tearDown(): void
    {

@@ -20,7 +20,7 @@ class CreateTokensTable extends Migration
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('token_type_id');
             $table->unsignedBigInteger('page_id')->nullable();
-            $table->timestamp('expiration')->nullable();
+            $table->dateTime('expiration')->nullable();
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');

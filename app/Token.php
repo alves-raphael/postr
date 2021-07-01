@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\SocialMedia\SocialMedia;
+use DateTime;
 
 class Token extends Model
 {
@@ -50,7 +51,7 @@ class Token extends Model
         return $this;
     }
 
-    public function setExpiration(?int $expiration): self
+    public function setExpiration(?DateTime $expiration): self
     {
         $this->expiration = $expiration;
         return $this;

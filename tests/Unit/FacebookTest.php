@@ -7,6 +7,7 @@ use App\SocialMedia\Facebook;
 use App\Token;
 use App\TokenType;
 use App\User;
+use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Laravel\Socialite\AbstractUser;
@@ -72,11 +73,12 @@ class FacebookTest extends TestCase
                 ->andReturn($response)->mock();
         $facebook = new Facebook($http);
         $got = $facebook->fetchLongLivedUserAccessToken(Str::random(10));
+        $expiration = (new DateTime())->setTimestamp(time() + 5183944);
         $expected = (new Token)
                     ->setToken("60d267addefc4")
                     ->setSocialMedia($facebook)
                     ->setTokenType(TokenType::USER_ACCESS)
-                    ->setExpiration(time() + 5183944);
+                    ->setExpiration($expiration);
         $this->assertEquals($got, $expected);
    }
 

@@ -83,7 +83,12 @@ class Facebook extends AbstractSocialMedia
         $url = "https://graph.facebook.com/v11.0/oauth/access_token?{$parameters}";
         $response = $this->http->request('GET', $url);
         $token = json_decode($response->getBody());
-        $expiration = isset($token->expires_in) ? time() + (int) $token->expires_in : null;
+        
+        $expiration = null;
+        if(isset($token->expires_in)){
+            $expiration = time() + (int) $token->expires_in;
+            $expiration = (new DateTime())->setTimestamp($expiration);
+        }
         return (new Token)
                     ->setToken($token->access_token)
                     ->setSocialMedia($this)
@@ -97,9 +102,8 @@ class Facebook extends AbstractSocialMedia
         $pageAccess = (new Token())->getPageAccess($post->page, $user);
         $body = \urlencode($post->body);
         $url = "https://graph.facebook.com/{$post->page_id}/feed?message={$body}&access_token={$pageAccess->token}";
-        $client = new Client();
 
-        $response = $client->request('POST', $url);
+        $response = $this->http->request('POST', $url);
         $response = json_decode($response->getBody());
         $post->id = $response->id;
         $post->published = true;
