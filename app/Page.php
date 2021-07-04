@@ -20,7 +20,7 @@ class Page extends Model
         return $this->hasMany(Post::class);
     }
 
-    public function user()
+    public function users()
     {
         return $this->belongsToMany(User::class);
     }

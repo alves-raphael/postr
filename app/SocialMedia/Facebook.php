@@ -34,8 +34,7 @@ class Facebook extends AbstractSocialMedia
                 ->setEmail($user->email);
 
         $user->save();
-        $user->tokens()->save($accessToken);
-        
+        $user->tokens()->save($accessToken);       
         $user->tokens()->save($userId);
         $pages = $this->fetchPages($user);
 

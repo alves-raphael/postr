@@ -3,6 +3,7 @@
 namespace App;
 
 use App\SocialMedia\SocialMedia;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -32,11 +33,13 @@ class User extends Authenticatable
         return $this->hasMany(Token::class);
     }
 
-    public function getAccessToken(SocialMedia $socialMedia): Token
+    public function getAccessToken(SocialMedia $socialMedia)
     {
         return $this->tokens()->where('token_type_id', TokenType::USER_ACCESS)
-                ->where('expiration', '<=' , time())
-                ->orWhere('expiration', null)
+                ->where(function($query){
+                    $query->where('expiration', '>=' , time())
+                    ->orWhere('expiration', null);
+                })
                 ->where('social_media_id', $socialMedia->getId())
                 ->orderBy('created_at')->first();
     }
@@ -45,17 +48,6 @@ class User extends Authenticatable
     {
         return $this->tokens()->where('token_type_id', TokenType::USER_ID)
                 ->where('social_media_id', $socialMedia->getId())->first();
-    }
-
-    public function getPageAccessToken(): Token
-    {
-        $token = $this->tokens()->where('token_type_id', TokenType::PAGE_ACCESS)
-                ->where('expiration', '<=' , time())
-                ->orWhere('expiration', null)
-                ->where('social_media_id', 1)
-                ->orderBy('created_at')->first();
-        dd($token->token_type_id);
-        return $token;
     }
 
     public function pages(){
