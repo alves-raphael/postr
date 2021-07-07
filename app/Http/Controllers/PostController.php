@@ -46,14 +46,19 @@ class PostController extends Controller
         }
 
         $posts = Post::whereIn('id', $posts)->get();
+        if($posts->isEmpty()){
+            $response['messages'][] = "Invalid posts id";
+            return response()->json($response)->setStatusCode(400);
+        }
+
         $published = $posts->filter(function($post){
             return $post->published;
-        });
+        })->pluck('id');
 
         // Check if the same posts have already been published
-        if(!empty($published)){
-            $ids = implode(",", $published);
-            $response['messages'][] = "The posts with the id {$ids} have already been published. Please try again";
+        if($published->isNotEmpty()){
+            $ids =  $published->join(', ');
+            $response['messages'][] = "The posts with the id {$ids} have already been published.";
             return response()->json($response)->setStatusCode(400);
         }
 
