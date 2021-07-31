@@ -112,4 +112,16 @@ class Post extends Model
             }
         });
     }
+
+    public function fetchPageAccess(): Token
+    {
+        return Token::where('token_type_id', TokenType::PAGE_ACCESS)
+                ->where('social_media_id', 1)
+                ->where('page_id', $this->page_id)
+                ->where('user_id', $this->user_id)
+                ->where(function($query){
+                    $query->where('expiration', '>=' , time())
+                    ->orWhere('expiration', null);
+                })->orderBy('created_at')->first();
+    }
 }
