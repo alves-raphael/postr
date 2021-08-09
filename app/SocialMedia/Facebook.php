@@ -99,7 +99,7 @@ class Facebook extends AbstractSocialMedia
 
     public function publish(Post $post) : void
     {
-        $pageAccess = (new Token())->getPageAccess($post->page, $post->user);
+        $pageAccess = $post->fetchPageAccess();
         $body = \urlencode($post->body);
         $url = "https://graph.facebook.com/{$post->page_id}/feed?message={$body}&access_token={$pageAccess->token}";
 
