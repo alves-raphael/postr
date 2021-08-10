@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->text('body');
             $table->dateTime('publication')->useCurrent();
             $table->boolean('published')->default(false);
-            $table->unsignedInteger('topic_id')->nullable();
+            $table->unsignedBigInteger('topic_id')->nullable();
             $table->unsignedInteger('social_media_id');
             $table->unsignedBigInteger('page_id')->nullable();
             $table->unsignedInteger('user_id');

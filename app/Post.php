@@ -59,6 +59,11 @@ class Post extends Model
         return $this->belongsTo(SocialMedia::class);
     }
 
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class);
+    }
+
     public static function getRules()
     {
         return [
