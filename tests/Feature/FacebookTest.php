@@ -24,6 +24,34 @@ class FacebookTest extends TestCase
       $this->seed();
    }
 
+   public function testFetchUserOrSignUp()
+   {
+      $page1 = factory(Page::class)->make();
+      $user = factory(User::class)->create(['email' => 'raphael.alves@gmail.com']);
+      $user->pages()->save($page1);
+
+      $page2 = factory(Page::class)->make();
+      $pages = collect([[1, $page1], [factory(Token::class)->make(), $page2]]);
+
+      $abstractUser = (new AbstractUser())
+         ->map([
+            'email' => "raphael.alves@gmail.com",
+         ]);
+
+      $facebook = Mockery::mock(Facebook::class)
+                  ->makePartial()
+                  ->shouldReceive('signup')
+                  ->andReturn($user)
+                  ->shouldReceive('fetchPages')
+                  ->andReturn($pages)
+                  ->mock();
+
+      $facebook->fetchUserOrSignUp($abstractUser);
+      
+      $this->assertNotEmpty($user->pages->find($page1->id)->first());
+      $this->assertNotEmpty($user->pages->find($page2->id)->first());
+   }
+
    public function testSignUp()
    {
       $user = new User(['id' => 1]);
@@ -34,14 +62,14 @@ class FacebookTest extends TestCase
          ->setTokenType(TokenType::USER_ACCESS)
          ->setExpiration($expiration)
          ->setSocialMediaId(1);
-      
+
       $accessToken2 = (new Token())
          ->setToken("60de5c772f3bf")
          ->setTokenType(TokenType::USER_ACCESS)
          ->setExpiration($expiration)
          ->setSocialMediaId(1);
       $cuteKittenPage = (new Page())->setId(68738)->setName('Cute Kitten Page');
-      
+
       $pages = collect([ [
          (new Token())
             ->setSocialMediaId(1)
@@ -61,13 +89,13 @@ class FacebookTest extends TestCase
             $cuteKittenPage
          ]
       ]);
-      
+
       $facebook = Mockery::mock(Facebook::class)->makePartial()
                ->shouldReceive('fetchLongLivedUserAccessToken')
                ->andReturn($accessToken, $accessToken2)
                ->shouldReceive('fetchPages')->andReturn($pages, $pages2)
                ->mock();
-      
+
       $user = (new AbstractUser())
          ->map([
             'id' => 7127,
@@ -75,57 +103,32 @@ class FacebookTest extends TestCase
             'email' => "raphael.alves@gmail.com",
             'token' => '60d278d59af5a'
          ]);
-      
-      $firstGottenUser = $facebook->signup($user);
-      
+
+      $firstGottenUser = $facebook->fetchUserOrSignUp($user);
+
       $secondUser = (new AbstractUser())
-      ->map([
-         'id' => 6546,
-         'name' => "Jonisclayson",
-         'email' => "jonisclayson.pinto@gmail.com",
-            'token' => '60dcf9989938f'
-         ]);
-         
-      $secondGottenUser = $facebook->signup($secondUser);
+         ->map([
+            'id' => 6546,
+            'name' => "Jonisclayson",
+            'email' => "jonisclayson.pinto@gmail.com",
+               'token' => '60dcf9989938f'
+            ]);
+
+      $secondGottenUser = $facebook->fetchUserOrSignUp($secondUser);
 
       $gottenToken = $firstGottenUser->getAccessToken($facebook);
       $this->assertEquals($firstGottenUser->email, $user->email);
       $this->assertEquals($firstGottenUser->name, $user->name);
+      $this->assertEquals($firstGottenUser->pages()->count(), 1);
       $this->assertEquals($gottenToken->token, $accessToken->token);
       $this->assertNotEmpty(Page::find(68738));
       $gottenPageToken = Token::where('token', '60cc0234607fe')->first();
       $this->assertNotEmpty($gottenPageToken);
-      $secondUserPage = $secondGottenUser->pages;
-      $this->assertEquals($secondUserPage->count(), 1);
-      $this->assertEquals($secondUserPage->first()->name, 'Cute Kitten Page');
+      $this->assertEquals($secondGottenUser->pages()->count(), 1);
+      $this->assertEquals($secondGottenUser->pages()->first()->name, 'Cute Kitten Page');
       $this->assertEquals($secondGottenUser->getUserId($facebook)->token, '6546');
       $this->assertEquals($firstGottenUser->getUserId($facebook)->token, '7127');
    }
-
-   // public function testPublish()
-   // {
-   //    $id = rand(10000, 100000);
-   //    $response = '{"id":"'.$id.'"}';
-   //    $response = Mockery::mock(Response::class)
-   //                ->shouldReceive('getBody')
-   //                ->andReturn($response)->mock();
-   //    $http = Mockery::mock(Client::class)
-   //             ->shouldReceive('request')
-   //             ->withSomeOfArgs('GET')
-   //             ->andReturn($response)->mock();
-   //    $facebook = Mockery::mock(Facebook::class)
-   //                   ->makePartial()
-   //                   ->shouldReceive([
-   //                      'getPageAccessToken' => (new Token)->setToken(Str::random(10)),
-   //                   ])->andSet('http', $http)->mock();
-   //    $post = (new Post())
-   //             ->setTitle('Simple Test')
-   //             ->setBody('Tempor amet voluptate elit enim reprehenderit velit voluptate.')
-   //             ->setSocialMedia($facebook)
-   //             ->setUser(User::find(1));     
-   //    $facebook->publish($post);
-      
-   // }
 
    public function tearDown(): void
    {

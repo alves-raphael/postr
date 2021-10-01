@@ -29,4 +29,6 @@ abstract class AbstractSocialMedia extends SocialMedia
      * @param Post $post - post to be sent
      */
     abstract function publish(Post $post) : void;
+
+    abstract function fetchUserOrSignUp(AbstractUser $abstractUser) : User;
 }

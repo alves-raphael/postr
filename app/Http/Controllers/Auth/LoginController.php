@@ -37,8 +37,7 @@ class LoginController extends Controller
 
     private function signUpAndLogin(AbstractSocialMedia $socialMedia, AbstractUser $abstract)
     {
-        $user = User::where('email', $abstract->email)->first();
-        $user = $user ?: $socialMedia->signup($abstract);
+        $user = $socialMedia->fetchUserOrSignUp($abstract);
         Auth::login($user);
         return redirect()->route('post.list');
     }

@@ -9,10 +9,7 @@ use App\Token;
 use App\TokenType;
 use App\User;
 use DateTime;
-use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class Facebook extends AbstractSocialMedia
 {
@@ -20,7 +17,7 @@ class Facebook extends AbstractSocialMedia
     protected $id = 1;
     protected $http;
 
-    public function signup(AbstractUser $user) : User
+    public function signup(AbstractUser $user): User
     {
        $accessToken = $this->fetchLongLivedUserAccessToken($user->token);
 
@@ -36,16 +33,26 @@ class Facebook extends AbstractSocialMedia
         $user->save();
         $user->tokens()->save($accessToken);       
         $user->tokens()->save($userId);
-        $pages = $this->fetchPages($user);
+        
+        return $user;
+    }
 
-        foreach($pages as $pair){
-            list($token, $page) = $pair;
-            if(!$page->alreadyExists()){
-                $page->save();
-            }
-            $user->pages()->attach($page->id);
-            $page->tokens()->save($token);
+    public function fetchUserOrSignUp(AbstractUser $abstractUser): User
+    {
+        $user = User::where('email', $abstractUser->email)->first();
+        if (empty($user)) {
+            $user = $this->signup($abstractUser);
         }
+
+        $userPagesIds = $user->pages->pluck('id');
+        // Filter pages that already exists
+        $pages = $this->fetchPages($user)
+            ->filter(function($page) use ($userPagesIds) {
+                return !$userPagesIds->contains($page[1]->id);
+        });
+
+        $this->savePages($pages, $user);
+
         return $user;
     }
 
@@ -109,5 +116,17 @@ class Facebook extends AbstractSocialMedia
         $post->published = true;
         $post->publication = new DateTime();
         $post->save();
+    }
+
+    public function savePages(Collection $pages, User $user): void
+    {
+        foreach($pages as $pair){
+            list($token, $page) = $pair;
+            if(!$page->alreadyExists()){
+                $page->save();
+            }
+            $user->pages()->attach($page->id);
+            $page->tokens()->save($token);
+        }
     }
 }
