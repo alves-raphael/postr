@@ -6,7 +6,7 @@ use App\SocialMedia\AbstractSocialMedia;
 use App\SocialMedia\Facebook;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
-
+use App\SocialMedia\SocialMedia;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(AbstractSocialMedia::class, function ($app){
             $http = new Client();
-            if(request()->get('socialMedia') == 1){
+            if(request()->get('socialMedia') == SocialMedia::FACEBOOK){
                 return new Facebook($http);
             }
             return new Facebook($http);

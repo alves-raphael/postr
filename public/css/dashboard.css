@@ -14,3 +14,9 @@ a.icon {
 .centered {
     text-align: center !important;
 }
+
+.scroll-table {
+    height: 80vh;
+    overflow: scroll;
+    margin-top: 1rem;
+}

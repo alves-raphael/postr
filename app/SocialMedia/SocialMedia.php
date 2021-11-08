@@ -11,6 +11,8 @@ class SocialMedia extends Model
 
     protected $fillable = ['name'];
 
+    public const FACEBOOK = 1;
+
     public function tokens(){
         return $this->hasMany(Token::class);
     }
