@@ -15,11 +15,11 @@
           <div class="item title">
             Postr
           </div>
-          <a href="{{route('post.list')}}" class="item active">
+          <a href="{{route('post.list')}}" class="item">
             <i class="sticky note icon"></i>
             Publicações
           </a>
-          <a class="item">
+          <a href="{{route('topic.list')}}" class="item">
             <i class="newspaper icon"></i>
             Assuntos
           </a>

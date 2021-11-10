@@ -40,12 +40,14 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('posts/create', "PostController@create")->name('post.create.new');
 
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-
-    Route::get('page/create', 'PageController@createMany')->name('page.create');
-
     Route::get('post/edit/{id}', 'PostController@editView')->name('post.edit.view');
 
     Route::post('post/edit/{id}', 'PostController@edit')->name('post.edit');
+
+    Route::get('topics/list', "TopicController@list")->name('topic.list');
+
+    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
+    Route::get('page/create', 'PageController@createMany')->name('page.create');
 
 });
