@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('topics/list', "TopicController@list")->name('topic.list');
 
+    Route::post('topics/create', "TopicController@create")->name('topic.create');
+
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
     Route::get('page/create', 'PageController@createMany')->name('page.create');

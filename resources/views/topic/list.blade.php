@@ -31,7 +31,7 @@
                         <td>{{ $topic->id }}</td>
                         <td>{{ $topic->order }}</td>
                         <td>{{ $topic->title }}</td>
-                        <td>{{ $topic->status }}</td>
+                        <td>{{ $topic->getStatusDescription() }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -43,7 +43,8 @@
           Novo assunto
         </div>
         <div class="content">
-            <form class="ui form" id="create-new" method="POST" action="">
+            <form class="ui form" id="create-new" method="POST" action="{{route('topic.create')}}">
+                @csrf
                 <div class="field">
                     <label>Título</label>
                     <input type="text" name="title" >
