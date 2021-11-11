@@ -12,6 +12,7 @@ class Topic extends Model
     const PENDING = 0;
     const PROGRESS = 1;
     const DONE = 2;
+    const INTERRUPTED = 4;
 
     public function posts()
     {

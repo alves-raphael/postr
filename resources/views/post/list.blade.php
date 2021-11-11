@@ -3,7 +3,9 @@
 @section('title') Publicações @endsection
 
 @section('body')
-    <a href="{{route('post.create.view')}}" class="ui green button"> <i class="icon plus"></i> Novo</a>
+    <a href="{{route('post.create.view')}}" class="ui green button"> 
+        <i class="icon plus"></i> Novo
+    </a>
     
     @if(empty($posts))
         <div class="ui warning message">

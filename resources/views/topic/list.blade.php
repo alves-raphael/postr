@@ -7,37 +7,95 @@
         <i class="icon plus"></i> Novo
     </button>
 
-    @if(empty($topics))
-    <div class="ui warning message">
-        <div class="header">
-            Aviso!
+    <h2> Em progresso </h2>
+    @if(empty($progress))
+        <div class="ui warning message">
+            <div class="header">
+                Aviso!
+            </div>
+            Não há nenhum assunto em progresso.
         </div>
-        Nenhum registro foi encontrado.
-    </div>
     @else
-    <div class="scroll-table">
+        <div class="ui cards">
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        <p>{{ $progress->title }}</p>
+                    </div>
+                    {{-- <div class="description">
+                        <i class="facebook square icon bigger"></i>
+                        <i class="twitter square icon bigger"></i>
+                        <i class="linkedin square icon bigger"></i>
+                    </div> --}}
+                </div>
+                {{-- <div class="extra content">
+                    <div class="ui two buttons">
+                        <div class="ui basic red button">Cancelar</div>
+                    </div>
+                </div> --}}
+            </div>
+        </div>
+    @endif
+
+    <h2> Pendentes </h2>
+    @if(empty($pending))
+        <div class="ui warning message">
+            <div class="header">
+                Aviso!
+            </div>
+            Não há nenhum assunto em pendente.
+        </div>
+    @else
         <table class="ui celled striped table">
             <thead>
                 <tr>
                     <th> ID </th>
                     <th> Ordem </th>
                     <th> Título </th>
-                    <th> Status </th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($topics as $topic)
+                @foreach ($pending as $topic)
                     <tr>
                         <td>{{ $topic->id }}</td>
                         <td>{{ $topic->order }}</td>
                         <td>{{ $topic->title }}</td>
-                        <td>{{ $topic->getStatusDescription() }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-    </div>
     @endif
+
+    <h2> Finalizados </h2>
+    @if(empty($done))
+        <div class="ui warning message">
+            <div class="header">
+                Aviso!
+            </div>
+            Não há nenhum assunto em finalizado.
+        </div>
+    @else
+            <table class="ui celled striped table">
+                <thead>
+                    <tr>
+                        <th> ID </th>
+                        <th> Ordem </th>
+                        <th> Título </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($done as $topic)
+                        <tr>
+                            <td>{{ $topic->id }}</td>
+                            <td>{{ $topic->order }}</td>
+                            <td>{{ $topic->title }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+    @endif
+
+
     <div class="ui tiny modal">
         <div class="header">
           Novo assunto

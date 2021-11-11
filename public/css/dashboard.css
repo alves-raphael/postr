@@ -20,3 +20,7 @@ a.icon {
     overflow: scroll;
     margin-top: 1rem;
 }
+
+i.bigger {
+    font-size: 2rem;
+}

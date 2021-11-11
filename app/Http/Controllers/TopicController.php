@@ -11,8 +11,10 @@ class TopicController extends Controller
 
     public function list()
     {
-        $topics = Auth::user()->topics()->get();
-        return view('topic.list', ['topics' => $topics]);
+        $pending = Auth::user()->topics()->where('status', Topic::PENDING)->get();
+        $progress = Auth::user()->topics()->where('status', Topic::PROGRESS)->first();
+        $done = Auth::user()->topics()->where('status', Topic::DONE)->get();
+        return view('topic.list', ['pending' => $pending, 'progress' => $progress, 'done' => $done ]);
     }
 
     public function create(Request $request)
