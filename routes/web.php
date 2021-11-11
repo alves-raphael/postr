@@ -50,6 +50,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
+    Route::get('schedule', 'ScheduleController@manage')->name('schedule');
+
     Route::get('page/create', 'PageController@createMany')->name('page.create');
 
 });

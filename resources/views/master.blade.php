@@ -10,7 +10,6 @@
     <title>Postr - @yield('title')</title>
 </head>
 <body>
-    
       <div class="ui left visible inverted vertical menu sidebar">
         <div class="item title">
           Postr
@@ -23,7 +22,7 @@
           <i class="newspaper icon"></i>
           Assuntos
         </a>
-        <a class="item">
+        <a href="{{route('schedule')}}" class="item">
           <i class="calendar icon"></i>
           Conograma
         </a>
@@ -39,7 +38,6 @@
           @yield('body')
         </div>
       </div>
-      
     <script src="{{asset('js/jquery.min.js')}}"></script>
     <script src="{{asset('semanticui/semantic.min.js')}}"></script>
     <script src="{{asset('js/functions.js')}}"></script>
