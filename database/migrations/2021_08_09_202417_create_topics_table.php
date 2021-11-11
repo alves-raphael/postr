@@ -17,7 +17,7 @@ class CreateTopicsTable extends Migration
             $table->id();
             $table->string('title');
             $table->unsignedInteger('order');
-            $table->boolean('done');
+            $table->tinyInteger('status');
             $table->unsignedInteger('user_id');
             $table->timestamps();
 
