@@ -7,6 +7,7 @@ use App\Post;
 use App\SocialMedia\SocialMedia;
 use App\SocialMedia\AbstractSocialMedia;
 use App\SocialMedia\Twitter;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -28,14 +29,15 @@ class PostController extends Controller
         return redirect()->route('post.list')->with('success', "Publicação criada {$extra}com successo");
     }
 
-    public function list(){
-        $pages = Auth::user()->pages()->get();
-        $posts = collect([]);
-        foreach($pages as $page){
-            $posts = $posts->merge($page->posts()->get()->all());
+    public function list(Request $request){
+        $pages = Auth::user()->pages->pluck('id');    
+        $posts = Post::whereIn('page_id', $pages)->orderBy('created_at', 'desc');
+        $socialMedias = SocialMedia::all();
+        $filters = $request->only(['start','end', 'socialMedia']);
+        if(!empty($filters)) {
+            $posts = $this->filter($posts, $filters);
         }
-        $posts = $posts->sortByDesc('created_at');
-        return view('post.list', ['posts' => $posts]);
+        return view('post.list', ['posts' => $posts->get(), 'socialMedias' => $socialMedias]);
     }
 
     public function publish(Request $request, AbstractSocialMedia $socialMedia){
@@ -101,5 +103,17 @@ class PostController extends Controller
         }
         $post->update($request->all());
         return redirect()->route('post.list')->with('success', 'Publicação foi editada com sucesso!');
+    }
+
+    public function filter($posts, array $filter)
+    {
+        if(!empty($filter['start'])){
+            $posts = $posts->whereDate('publication', '>=', $filter['start']);
+        } if(!empty($filter['end'])){
+            $posts = $posts->whereDate('publication', '<=', $filter['end']);
+        } if(!empty($filter['socialMedia'])){
+            $posts = $posts->where('social_media_id', $filter['socialMedia']);
+        }
+        return $posts;
     }
 }

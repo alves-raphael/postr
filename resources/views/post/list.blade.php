@@ -15,6 +15,31 @@
             Nenhum registro foi encontrado.
         </div>
     @else
+        <form action="{{route('post.list')}}" class="ui form" style="margin: 10px">
+            <div class="four fields">
+                <div class="field">
+                    <label for="socialMedia">Rede Social</label>
+                    <select name="socialMedia" id="socialMedia">
+                        <option value="">Selecione...</option>
+                        @foreach ($socialMedias as $socialMedia)
+                            <option value="{{$socialMedia->id}}">{{$socialMedia->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="start">Início</label>
+                    <input type="date" name="start" id="start">
+                </div>
+                <div class="field">
+                    <label for="end">Fim</label>
+                    <input type="date" name="end" id="end">
+                </div>
+                <div class="field">
+                    <label for="" style="opacity:0">A</label>
+                    <input type="submit" class="ui blue button" value="Filtrar">
+                </div>
+            </div>
+        </form>
         <div class="scroll-table">
             <table class="ui celled striped table">
                 <thead>
