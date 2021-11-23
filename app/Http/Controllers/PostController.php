@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\SocialMedia\SocialMedia;
 use App\SocialMedia\AbstractSocialMedia;
+use App\SocialMedia\Twitter;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller

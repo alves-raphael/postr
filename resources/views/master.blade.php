@@ -24,7 +24,7 @@
         </a>
         <a href="{{route('schedule')}}" class="item">
           <i class="calendar icon"></i>
-          Conograma
+          Cronograma
         </a>
         <a href="{{route('logout')}}" class="item">
           <i class="sign out alternate icon"></i>

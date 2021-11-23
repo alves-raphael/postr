@@ -29,7 +29,8 @@ class User extends Authenticatable
         'remember_token'
     ];
 
-    public function tokens(){
+    public function tokens()
+    {
         return $this->hasMany(Token::class);
     }
 
@@ -50,16 +51,24 @@ class User extends Authenticatable
                 ->where('social_media_id', $socialMedia->getId())->first();
     }
 
-    public function pages(){
+    public function pages()
+    {
         return $this->belongsToMany(Page::class);
     }
 
-    public function posts(){
+    public function posts()
+    {
         return $this->hasMany(Post::class);
     }
 
-    public function topics(){
+    public function topics()
+    {
         return $this->hasMany(Topic::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
     }
 
     public function setName(string $name): self

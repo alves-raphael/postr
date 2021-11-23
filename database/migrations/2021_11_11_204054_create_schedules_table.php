@@ -16,12 +16,15 @@ class CreateSchedulesTable extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('weekday');
+            $table->time('time');
             $table->unsignedInteger('social_media_id');
             $table->unsignedInteger('user_id');
             $table->timestamps();
 
             $table->foreign('social_media_id')->references('id')->on('social_media');
             $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unique(['social_media_id', 'user_id']);
         });
     }
 

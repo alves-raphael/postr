@@ -52,6 +52,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('schedule', 'ScheduleController@manage')->name('schedule');
 
+    Route::post('schedule/save', 'ScheduleController@save')->name('schedule.save');
+
     Route::get('page/create', 'PageController@createMany')->name('page.create');
 
 });

@@ -13,6 +13,10 @@ class SocialMedia extends Model
 
     public const FACEBOOK = 1;
 
+    public static function getIdBySlug() {
+        
+    }
+
     public function tokens(){
         return $this->hasMany(Token::class);
     }

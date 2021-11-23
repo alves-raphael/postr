@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Schedule extends Model
 {
-    protected $fillable = ['weekday', 'social_media_id', 'user_id'];
+
+    private const WEEK_DAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+
+    public static function getWeekDays(): array
+    {
+        return self::WEEK_DAYS;
+    }
+
+    protected $fillable = ['weekday', 'social_media_id', 'user_id', 'time'];
 
     public function user()
     {
