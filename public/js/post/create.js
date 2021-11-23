@@ -4,17 +4,17 @@ var dateTimeInputs = [$('#release-date'), $('#release-hour')];
 
 $('#send-now').change(function(){
     if (this.value == 'imediato'){
-        hideMany(dateTimeInputs);
-        hide($('#assunto'));
+        disableMany(dateTimeInputs);
+        disable($('#assunto'));
         publish.prop("disabled", true);
     } else if (this.value == 'agendado') {
-        showMany(dateTimeInputs);
-        hide($('#assunto'));
+        enableMany(dateTimeInputs);
+        disable($('#assunto'));
         publish.prop("disabled", false);
     } else if (this.value == 'assunto') {
-        show($('#assunto'));
-        hideMany(dateTimeInputs);
-        publish.prop("disabled", false);
+        enable($('#assunto'));
+        disableMany(dateTimeInputs);
+        publish.prop("disabled", true);
     }
 });
 

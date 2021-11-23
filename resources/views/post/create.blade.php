@@ -39,25 +39,24 @@
             <option value="assunto">Assunto</option>
         </select>
       </div>
-      <div class="hidden field" id="release-date">
+      <div class="hidden field disabled" id="release-date">
         <label>Data da publicação</label>
         <input type="date" name="date" id="date" disabled>
       </div>
-      <div class="hidden field" id="release-hour">
+      <div class="hidden field disabled" id="release-hour">
         <label>Hora da publicação</label>
         <input type="time" name="time" id="time" disabled>
       </div>
-      <input type="hidden" name="publication" id="publish" value="9999-99-99 99:99" disabled>
       <div class="hidden field" id="assunto">
         <label>Assunto</label>
-        <select name="topic">
+        <select name="topic_id">
           <option value="">Selecione...</option>
           @foreach ($topics as $topic)
-          <option value="{{$topic->id}}">{{$topic->title}}</option>
+            <option value="{{$topic->id}}">{{$topic->title}}</option>
           @endforeach
         </select>
       </div>
-      <input type="hidden" name="publication" id="publish" value="9999-99-99 99:99" disabled>
+      <input type="hidden" name="publication" id="publish" value="9999-99-99 99:99">
     </div>
     <div class="field">
       <textarea name="body" id="" cols="30" rows="10"></textarea>

@@ -9,7 +9,7 @@ use DateTime;
 
 class Post extends Model
 {
-    protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id','page_id'];
+    protected $fillable = ['title', 'body', 'publication', 'published','social_media_token', 'social_media_id','page_id', 'topic_id'];
     public $incrementing = false;
 
     protected $casts = [

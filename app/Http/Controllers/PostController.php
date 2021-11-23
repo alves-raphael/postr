@@ -24,7 +24,8 @@ class PostController extends Controller
         $post = new Post($request->all());
         Auth::user()->posts()->save($post);
         $extra = '';
-        if(!$post->isScheduled()){
+
+        if(!$post->isScheduled() && empty($post->topic_id)) {
             $socialMedia->publish($post);
             $extra = 'e publicada ';
         }
