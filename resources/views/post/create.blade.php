@@ -31,20 +31,31 @@
     </div>
     <div class="three fields">
       <div class="field">
-        <label>Enviar imediatamente?</label>
+        <label>Tipo de envio</label>
         <select class="ui fluid dropdown" name="sendnow" id="send-now">
             <option value="">Selecione</option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
+            <option value="imediato">Envio imediato</option>
+            <option value="agendado">Agendado</option>
+            <option value="assunto">Assunto</option>
         </select>
       </div>
-      <div class="disabled field" id="release-date">
+      <div class="hidden field" id="release-date">
         <label>Data da publicação</label>
         <input type="date" name="date" id="date" disabled>
       </div>
-      <div class="disabled field" id="release-hour">
+      <div class="hidden field" id="release-hour">
         <label>Hora da publicação</label>
         <input type="time" name="time" id="time" disabled>
+      </div>
+      <input type="hidden" name="publication" id="publish" value="9999-99-99 99:99" disabled>
+      <div class="hidden field" id="assunto">
+        <label>Assunto</label>
+        <select name="topic">
+          <option value="">Selecione...</option>
+          @foreach ($topics as $topic)
+          <option value="{{$topic->id}}">{{$topic->title}}</option>
+          @endforeach
+        </select>
       </div>
       <input type="hidden" name="publication" id="publish" value="9999-99-99 99:99" disabled>
     </div>

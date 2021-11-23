@@ -7,6 +7,7 @@ use App\Post;
 use App\SocialMedia\SocialMedia;
 use App\SocialMedia\AbstractSocialMedia;
 use App\SocialMedia\Twitter;
+use App\Topic;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,8 @@ class PostController extends Controller
 {
     public function creation(){
         $pages = Auth::user()->pages()->get();
-        return view('post.create', ['socialMedias' => SocialMedia::all(), 'pages' => $pages]);
+        $topics = Auth::user()->topics->where('status', Topic::PENDING);
+        return view('post.create', ['socialMedias' => SocialMedia::all(), 'pages' => $pages, 'topics' => $topics]);
     }
 
     public function create(Request $request, AbstractSocialMedia $socialMedia){

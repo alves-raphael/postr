@@ -21,3 +21,23 @@ function enableMany(inputs){
         input.children(":disabled").prop("disabled", false);
     });
 }
+
+function hide(input) {
+    input.addClass('hidden');
+}
+
+function show(input) {
+    input.removeClass('hidden');
+}
+
+function showMany(inputs) {
+    inputs.forEach((input) => {
+        show(input);
+    });
+}
+
+function hideMany(inputs) {
+    inputs.forEach((input) => {
+        hide(input);
+    });
+}

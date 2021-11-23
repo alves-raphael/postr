@@ -3,11 +3,17 @@ var publish = $('#publish');
 var dateTimeInputs = [$('#release-date'), $('#release-hour')];
 
 $('#send-now').change(function(){
-    if (this.value == 'true'){
-        disableMany(dateTimeInputs);
+    if (this.value == 'imediato'){
+        hideMany(dateTimeInputs);
+        hide($('#assunto'));
         publish.prop("disabled", true);
-    } else {
-        enableMany(dateTimeInputs);
+    } else if (this.value == 'agendado') {
+        showMany(dateTimeInputs);
+        hide($('#assunto'));
+        publish.prop("disabled", false);
+    } else if (this.value == 'assunto') {
+        show($('#assunto'));
+        hideMany(dateTimeInputs);
         publish.prop("disabled", false);
     }
 });
