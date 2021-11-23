@@ -93,7 +93,7 @@ class PostController extends Controller
         return view('post.edit', $data);
     }
 
-    public function edit(int $id, Request $request){
+    public function edit(string $id, Request $request){
         $post = Auth::user()->posts()->find($id);
 
         if(empty($post) || !$post->isEditable()){
