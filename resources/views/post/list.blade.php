@@ -23,7 +23,7 @@
                         <th> Título </th>
                         <th> Publicação </th>
                         <th> Publicada </th>
-                        <th> Página </th>
+                        <th> Rede Social </th>
                         <th> Ações </th>
                     </tr>
                 </thead>
@@ -34,7 +34,7 @@
                             <td>{{$post->title}}</td>
                             <td>{{$post->publication->format('d/m/Y H:i')}}</td>
                             <td class="centered"><i class="{{ $post->published ? 'check green' : 'close red' }} icon"></i></td>
-                            <td>{{$post->page()->first()->name}}</td>
+                            <td>{{$post->socialMedia->name .' | '.  $post->page->name}}</td>
                             <td class="centered">
                                 <a class="icon" href="{{route('post.edit.view', $post->id)}}" data-content="Editar/Detalhes">
                                     <i class="edit icon action"></i>

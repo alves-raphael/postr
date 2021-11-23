@@ -30,10 +30,11 @@ class PostController extends Controller
 
     public function list(){
         $pages = Auth::user()->pages()->get();
-        $posts = [];
+        $posts = collect([]);
         foreach($pages as $page){
-            $posts = array_merge($posts, $page->posts()->get()->all());
+            $posts = $posts->merge($page->posts()->get()->all());
         }
+        $posts = $posts->sortByDesc('created_at');
         return view('post.list', ['posts' => $posts]);
     }
 
