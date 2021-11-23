@@ -106,7 +106,7 @@ class Facebook extends AbstractSocialMedia
 
     public function publish(Post $post) : void
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set('America/Bahia');
         $pageAccess = $post->fetchPageAccess();
         $body = \urlencode($post->body);
         $url = "https://graph.facebook.com/{$post->page_id}/feed?message={$body}&access_token={$pageAccess->token}";
