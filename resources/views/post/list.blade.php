@@ -16,7 +16,7 @@
         </div>
     @else
         <form action="{{route('post.list')}}" class="ui form" style="margin: 10px">
-            <div class="four fields">
+            <div class="five fields">
                 <div class="field">
                     <label for="socialMedia">Rede Social</label>
                     <select name="socialMedia" id="socialMedia">
@@ -37,6 +37,10 @@
                 <div class="field">
                     <label for="" style="opacity:0">A</label>
                     <input type="submit" class="ui blue button" value="Filtrar">
+                </div>
+                <div class="field">
+                    <label for="">Total</label>
+                    <input type="text" style="border:none" readonly value="{{$posts->count()}}">
                 </div>
             </div>
         </form>
